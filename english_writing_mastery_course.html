@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>English Writing Mastery | Help.debs</title>
+  <style>
+    :root {
+      --bg: #f7f3ff;
+      --bg-2: #fff8fd;
+      --panel: #ffffff;
+      --panel-2: #fef6ff;
+      --text: #241b38;
+      --muted: #6f6384;
+      --primary: #7a5cff;
+      --primary-2: #b8a7ff;
+      --pink: #ff9fd6;
+      --blue: #a9e6ff;
+      --yellow: #edff86;
+      --green: #b8ffcf;
+      --danger: #ff6f91;
+      --line: #d9cff5;
+      --shadow: 0 18px 45px rgba(78, 55, 133, .16);
+      --radius: 22px;
+      --radius-sm: 14px;
+      --mono: "Courier New", monospace;
+      --font: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top left, rgba(255, 159, 214, .28), transparent 28%),
+        radial-gradient(circle at top right, rgba(169, 230, 255, .45), transparent 30%),
+        linear-gradient(135deg, var(--bg), var(--bg-2));
+      color: var(--text);
+      font-family: var(--font);
+    }
+
+    button, textarea, input, select { font-family: inherit; }
+
+    .app-shell {
+      width: min(1280px, 100%);
+      margin: 0 auto;
+      padding: 22px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 22px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .logo {
+      width: 58px;
+      height: 58px;
+      border-radius: 18px;
+      background:
+        linear-gradient(135deg, var(--primary), var(--pink));
+      display: grid;
+      place-items: center;
+      color: white;
+      font-weight: 900;
+      letter-spacing: -1px;
+      box-shadow: var(--shadow);
+      border: 3px solid white;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: clamp(1.25rem, 3vw, 2rem);
+      line-height: 1;
+    }
+
+    .brand p {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: .94rem;
+    }
+
+    .xp-window {
+      background: var(--panel);
+      border: 2px solid #cabdf0;
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .xp-titlebar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(90deg, var(--primary), #9c84ff, var(--pink));
+      color: white;
+      padding: 10px 14px;
+      font-family: var(--mono);
+      font-size: .88rem;
+      font-weight: 700;
+    }
+
+    .window-buttons {
+      display: flex;
+      gap: 7px;
+    }
+
+    .dot {
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      background: white;
+      border: 1px solid rgba(0,0,0,.16);
+    }
+
+    .dashboard {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 20px;
+    }
+
+    .sidebar {
+      padding: 16px;
+      height: calc(100vh - 130px);
+      position: sticky;
+      top: 18px;
+      overflow: auto;
+    }
+
+    .profile-card {
+      background: linear-gradient(135deg, #fff, #f6efff);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: var(--yellow);
+      color: #332c00;
+      border: 1px solid rgba(0,0,0,.08);
+      border-radius: 999px;
+      padding: 7px 10px;
+      font-size: .78rem;
+      font-weight: 800;
+    }
+
+    .progress-wrap {
+      margin-top: 14px;
+    }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      color: var(--muted);
+      font-size: .82rem;
+      margin-bottom: 6px;
+    }
+
+    .progress-bar {
+      height: 13px;
+      background: #eee7ff;
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid #d5c8ff;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--primary), var(--pink));
+      border-radius: 999px;
+      transition: width .4s ease;
+    }
+
+    .module-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .module-btn {
+      width: 100%;
+      text-align: left;
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 17px;
+      padding: 13px;
+      cursor: pointer;
+      display: grid;
+      gap: 4px;
+      color: var(--text);
+      transition: .2s ease;
+    }
+
+    .module-btn:hover,
+    .module-btn.active {
+      transform: translateY(-1px);
+      border-color: var(--primary);
+      box-shadow: 0 10px 22px rgba(122, 92, 255, .16);
+      background: #fbf8ff;
+    }
+
+    .module-btn small {
+      color: var(--muted);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      font-size: .68rem;
+    }
+
+    .module-btn strong {
+      font-size: .95rem;
+    }
+
+    .main {
+      min-width: 0;
+    }
+
+    .hero {
+      padding: 24px;
+      min-height: 240px;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,.94), rgba(246, 239, 255, .94)),
+        repeating-linear-gradient(45deg, rgba(122,92,255,.08) 0 8px, transparent 8px 16px);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.25fr .75fr;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .hero h2 {
+      font-size: clamp(2rem, 5vw, 4rem);
+      line-height: .94;
+      letter-spacing: -2px;
+      margin: 10px 0 12px;
+    }
+
+    .hero p {
+      color: var(--muted);
+      line-height: 1.65;
+      max-width: 760px;
+      font-size: 1rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 999px;
+      padding: 12px 16px;
+      background: var(--primary);
+      color: white;
+      font-weight: 900;
+      cursor: pointer;
+      transition: .18s ease;
+      box-shadow: 0 10px 20px rgba(122, 92, 255, .22);
+    }
+
+    .btn:hover { transform: translateY(-1px); }
+
+    .btn.secondary {
+      background: white;
+      color: var(--primary);
+      border: 1px solid var(--line);
+      box-shadow: none;
+    }
+
+    .pixel-card {
+      background: #fff;
+      border: 2px solid #2d2142;
+      border-radius: 18px;
+      padding: 14px;
+      box-shadow: 8px 8px 0 #d8ccff;
+      font-family: var(--mono);
+      position: relative;
+    }
+
+    .pixel-screen {
+      height: 190px;
+      border-radius: 14px;
+      border: 2px solid #2d2142;
+      background:
+        linear-gradient(#bdefff 0 42%, #ccffc8 42% 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .pixel-person {
+      position: absolute;
+      bottom: 34px;
+      left: 50%;
+      width: 38px;
+      height: 62px;
+      transform: translateX(-50%);
+    }
+
+    .head { width: 30px; height: 30px; background: #ffd4b8; border: 2px solid #2d2142; border-radius: 10px; margin: 0 auto; }
+    .body { width: 38px; height: 32px; background: var(--primary); border: 2px solid #2d2142; border-radius: 8px 8px 4px 4px; margin-top: -1px; }
+    .desk { position: absolute; bottom: 18px; left: 32px; right: 32px; height: 20px; border: 2px solid #2d2142; background: #ffce73; border-radius: 8px; }
+    .cloud { position: absolute; top: 26px; left: 24px; background: white; border: 2px solid #2d2142; border-radius: 999px; padding: 8px 12px; font-size: .72rem; }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .lesson-panel,
+    .activity-panel,
+    .tool-panel {
+      padding: 18px;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .section-title h3 {
+      margin: 0;
+      font-size: 1.32rem;
+    }
+
+    .phase-tag {
+      font-size: .74rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--primary);
+    }
+
+    .lesson-body {
+      line-height: 1.7;
+      color: #392f50;
+    }
+
+    .lesson-body h4 {
+      margin: 24px 0 8px;
+      font-size: 1.05rem;
+    }
+
+    .lesson-body ul { padding-left: 18px; }
+
+    .quote-box,
+    .example-box {
+      background: #f8f4ff;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      margin: 12px 0;
+    }
+
+    .example-box strong { color: var(--primary); }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .tab-btn {
+      border: 1px solid var(--line);
+      background: white;
+      color: var(--text);
+      border-radius: 999px;
+      padding: 9px 12px;
+      cursor: pointer;
+      font-weight: 800;
+      font-size: .82rem;
+    }
+
+    .tab-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .exercise-card {
+      background: linear-gradient(135deg, #fff, #fff8fd);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .exercise-card h4 { margin: 0 0 6px; }
+    .exercise-card p { color: var(--muted); line-height: 1.6; }
+
+    textarea {
+      width: 100%;
+      min-height: 160px;
+      border: 1px solid #cfc2f3;
+      border-radius: 18px;
+      padding: 14px;
+      background: #fff;
+      color: var(--text);
+      line-height: 1.55;
+      resize: vertical;
+      outline: none;
+    }
+
+    textarea:focus,
+    input:focus,
+    select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(122,92,255,.12);
+    }
+
+    .mini-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .feedback {
+      display: none;
+      background: #f3fff6;
+      border: 1px solid #a7e9b7;
+      border-radius: 16px;
+      padding: 12px;
+      margin-top: 12px;
+      color: #285c34;
+      line-height: 1.55;
+    }
+
+    .rubric-item {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid #eee7ff;
+    }
+
+    .rubric-item:last-child { border-bottom: 0; }
+
+    .rubric-score {
+      font-weight: 900;
+      color: var(--primary);
+    }
+
+    .challenge-card {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+
+    .challenge-card.complete {
+      background: #f1fff5;
+      border-color: #9ce8b1;
+    }
+
+    .challenge-card label {
+      display: flex;
+      gap: 10px;
+      cursor: pointer;
+      line-height: 1.45;
+      color: #3a3150;
+    }
+
+    .word-bank {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 10px 0;
+    }
+
+    .word-chip {
+      background: #fff;
+      border: 1px dashed var(--primary);
+      border-radius: 999px;
+      padding: 7px 10px;
+      font-weight: 800;
+      font-size: .8rem;
+      color: var(--primary);
+    }
+
+    .floating-tools {
+      display: grid;
+      gap: 20px;
+    }
+
+    .timer-box {
+      display: grid;
+      gap: 12px;
+    }
+
+    .timer-display {
+      font-size: 2.4rem;
+      font-weight: 950;
+      letter-spacing: -1px;
+      text-align: center;
+      background: #f8f4ff;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 12px;
+      font-family: var(--mono);
+    }
+
+    .select,
+    input {
+      width: 100%;
+      border: 1px solid #cfc2f3;
+      border-radius: 14px;
+      background: white;
+      padding: 11px 12px;
+      outline: none;
+    }
+
+    .portfolio-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .portfolio-item {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 12px;
+      background: #fff;
+    }
+
+    .portfolio-item small { color: var(--muted); }
+    .portfolio-item p { margin: 8px 0 0; color: #3c3154; line-height: 1.5; }
+
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(28, 20, 44, .45);
+      z-index: 20;
+      padding: 22px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal {
+      width: min(760px, 100%);
+      max-height: 90vh;
+      overflow: auto;
+      background: white;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 2px solid var(--line);
+    }
+
+    .modal-body { padding: 20px; }
+
+    @media (max-width: 980px) {
+      .dashboard,
+      .content-grid,
+      .hero-grid {
+        grid-template-columns: 1fr;
+      }
+      .sidebar {
+        height: auto;
+        position: relative;
+        top: auto;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .app-shell { padding: 12px; }
+      .topbar { align-items: flex-start; flex-direction: column; }
+      .hero { padding: 18px; }
+      .hero h2 { letter-spacing: -1px; }
+      .content-grid { gap: 14px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo">HD</div>
+        <div>
+          <h1>English Writing Mastery</h1>
+          <p>Um curso completo de escrita em inglês — do básico ao fluente.</p>
+        </div>
+      </div>
+      <button class="btn secondary" onclick="openModal('aboutModal')">Como funciona</button>
+    </header>
+
+    <div class="dashboard">
+      <aside class="xp-window sidebar">
+        <div class="xp-titlebar">
+          <span>help.debs/course.exe</span>
+          <div class="window-buttons"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+        </div>
+        <div class="profile-card">
+          <span class="pill">✦ Writing Journey</span>
+          <h2 style="margin:12px 0 4px;">Seu progresso</h2>
+          <p style="margin:0;color:var(--muted);line-height:1.5;">Complete lições, faça exercícios e salve seus textos no portfólio.</p>
+          <div class="progress-wrap">
+            <div class="progress-label"><span>Curso completo</span><strong id="progressText">0%</strong></div>
+            <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+          </div>
+        </div>
+        <nav class="module-list" id="moduleList"></nav>
+      </aside>
+
+      <main class="main">
+        <section class="xp-window hero">
+          <div class="hero-grid">
+            <div>
+              <span class="pill">100% writing-based</span>
+              <h2>Write clearly. Think deeply. Sound natural.</h2>
+              <p>Este treinamento guia a aluna por uma progressão de escrita: frases naturais, conexão de ideias, parágrafos fortes, textos completos e escrita avançada com voz, ritmo e coesão.</p>
+              <div class="hero-actions">
+                <button class="btn" onclick="selectModule(0)">Começar curso</button>
+                <button class="btn secondary" onclick="openModal('diagnosticModal')">Fazer diagnóstico</button>
+                <button class="btn secondary" onclick="openModal('portfolioModal')">Ver portfólio</button>
+              </div>
+            </div>
+            <div class="pixel-card">
+              <div class="pixel-screen">
+                <div class="cloud">writing quest unlocked!</div>
+                <div class="desk"></div>
+                <div class="pixel-person"><div class="head"></div><div class="body"></div></div>
+              </div>
+              <p style="margin:12px 0 0;">Level up: sentence → paragraph → essay → voice.</p>
+            </div>
+          </div>
+        </section>
+
+        <div class="content-grid">
+          <section class="xp-window lesson-panel">
+            <div class="xp-titlebar">
+              <span id="lessonWindowTitle">lesson.html</span>
+              <div class="window-buttons"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+            </div>
+            <div style="padding:18px;">
+              <div class="section-title">
+                <div>
+                  <div class="phase-tag" id="phaseTag">Phase 1</div>
+                  <h3 id="lessonTitle">Building Natural Sentences</h3>
+                </div>
+                <button class="btn secondary" onclick="markCurrentComplete()">Marcar como concluído</button>
+              </div>
+              <div class="lesson-body" id="lessonBody"></div>
+            </div>
+          </section>
+
+          <aside class="floating-tools">
+            <section class="xp-window tool-panel">
+              <div class="xp-titlebar"><span>writing_timer.app</span><div class="window-buttons"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div></div>
+              <div style="padding:16px;" class="timer-box">
+                <div class="timer-display" id="timerDisplay">05:00</div>
+                <select class="select" id="timerSelect">
+                  <option value="300">5 minutos</option>
+                  <option value="600">10 minutos</option>
+                  <option value="1200">20 minutos</option>
+                  <option value="1800">30 minutos</option>
+                </select>
+                <div class="mini-row">
+                  <button class="btn" onclick="startTimer()">Iniciar</button>
+                  <button class="btn secondary" onclick="resetTimer()">Resetar</button>
+                </div>
+              </div>
+            </section>
+
+            <section class="xp-window tool-panel">
+              <div class="xp-titlebar"><span>daily_prompt.txt</span><div class="window-buttons"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div></div>
+              <div style="padding:16px;">
+                <h3 style="margin-top:0;">Prompt do dia</h3>
+                <p id="dailyPrompt" style="line-height:1.6;color:var(--muted);"></p>
+                <button class="btn secondary" onclick="newPrompt()">Novo prompt</button>
+              </div>
+            </section>
+          </aside>
+        </div>
+
+        <section class="xp-window activity-panel" style="margin-top:20px;">
+          <div class="xp-titlebar"><span>practice_lab.exe</span><div class="window-buttons"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div></div>
+          <div style="padding:18px;">
+            <div class="section-title">
+              <h3>Practice Lab</h3>
+              <span class="pill">Write → Rewrite → Save</span>
+            </div>
+            <div class="tabs" id="activityTabs"></div>
+            <div id="activityArea"></div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="aboutModal">
+    <div class="modal">
+      <div class="xp-titlebar"><span>about_course.txt</span><button class="btn secondary" onclick="closeModal('aboutModal')">Fechar</button></div>
+      <div class="modal-body">
+        <h2>Como usar este curso</h2>
+        <p>O curso é dividido em 10 módulos. Cada módulo tem uma lição, atividades práticas, desafios e uma área de escrita. A aluna deve escrever, revisar, salvar no portfólio e comparar sua evolução.</p>
+        <div class="quote-box"><strong>Fluxo ideal:</strong> estudar a lição → fazer os drills → escrever um texto → reescrever com mais coesão → salvar no portfólio.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="diagnosticModal">
+    <div class="modal">
+      <div class="xp-titlebar"><span>diagnostic_test.form</span><button class="btn secondary" onclick="closeModal('diagnosticModal')">Fechar</button></div>
+      <div class="modal-body">
+        <h2>Diagnóstico inicial de escrita</h2>
+        <p>Escreva um texto de 120 a 180 palavras sobre o tema abaixo. Depois, salve no portfólio como “Texto diagnóstico”.</p>
+        <div class="example-box"><strong>Prompt:</strong> Describe a moment when you realized you needed to change something in your life. What happened, what did you feel, and what did you learn?</div>
+        <textarea id="diagnosticText" placeholder="Write your diagnostic text here..."></textarea>
+        <div class="mini-row">
+          <button class="btn" onclick="saveSpecificText('Texto diagnóstico', document.getElementById('diagnosticText').value)">Salvar diagnóstico</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="portfolioModal">
+    <div class="modal">
+      <div class="xp-titlebar"><span>portfolio.folder</span><button class="btn secondary" onclick="closeModal('portfolioModal')">Fechar</button></div>
+      <div class="modal-body">
+        <h2>Portfólio de escrita</h2>
+        <p>Todos os textos salvos aparecem aqui. Use isso para comparar evolução.</p>
+        <div id="portfolioList" class="portfolio-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const course = [
+      {
+        phase: "Phase 1",
+        title: "Sentence Foundations",
+        subtitle: "Frases naturais, ordem do inglês e chunks básicos",
+        objective: "A aluna aprende a escrever frases claras sem traduzir literalmente do português.",
+        lesson: `
+          <h4>Objetivo do módulo</h4>
+          <p>Neste módulo, o foco é construir frases que soem naturais. A aluna aprende a organizar informação em inglês usando padrões simples, mas fortes.</p>
+          <h4>Principais padrões</h4>
+          <ul>
+            <li><strong>I’m interested in...</strong></li>
+            <li><strong>I usually tend to...</strong></li>
+            <li><strong>One thing I noticed is...</strong></li>
+            <li><strong>I ended up...</strong></li>
+            <li><strong>It made me feel...</strong></li>
+          </ul>
+          <div class="example-box"><strong>Weak:</strong> I have 24 years and like very much music.<br><strong>Strong:</strong> I’m 24 years old and I really like music.</div>
+          <h4>Mini regra</h4>
+          <p>Uma frase boa precisa responder com clareza: quem fez, o que aconteceu, quando/onde, por quê e com qual efeito.</p>
+        `,
+        activities: [
+          {type:"Reconstruction", prompt:"Rewrite this sentence naturally: 'I have difficult to speak because I think much in Portuguese.'", bank:["I find it difficult to...", "because", "I tend to..."]},
+          {type:"Expansion", prompt:"Expand this sentence into a richer sentence: 'I studied English yesterday.'", bank:["after work", "for a while", "because I wanted to", "even though"]},
+          {type:"Mini Writing", prompt:"Write 6 sentences about your routine using at least 3 chunks from the lesson.", bank:["I usually", "I tend to", "One thing I noticed", "At some point"]}
+        ]
+      },
+      {
+        phase: "Phase 1",
+        title: "Thinking in English",
+        subtitle: "Escrita rápida, associação e fluidez mental",
+        objective: "Reduzir a dependência da tradução mental e aumentar velocidade de produção.",
+        lesson: `
+          <h4>Objetivo do módulo</h4>
+          <p>Aqui a aluna treina escrita sem apagar o tempo todo. O objetivo é criar fluxo mental em inglês.</p>
+          <h4>Técnicas</h4>
+          <ul>
+            <li><strong>Fast writing:</strong> escrever por tempo, sem editar.</li>
+            <li><strong>Association writing:</strong> começar com uma palavra e puxar ideias.</li>
+            <li><strong>Reaction writing:</strong> reagir a uma cena, frase ou imagem.</li>
+          </ul>
+          <div class="quote-box">A primeira versão não precisa ser bonita. Ela precisa existir. Depois vem a reescrita.</div>
+        `,
+        activities: [
+          {type:"Fast Writing", prompt:"Write for 5 minutes about mornings. Do not stop. Do not delete.", bank:["When I wake up", "The first thing", "I usually feel", "It depends on"]},
+          {type:"Association", prompt:"Start with the word 'rain' and write memories, feelings, images and opinions connected to it.", bank:["It reminds me of", "I associate it with", "For some reason", "It feels like"]},
+          {type:"Reaction", prompt:"React to this sentence: 'Being busy can sometimes become a way to avoid yourself.'", bank:["I agree because", "This makes me think of", "In my experience", "Maybe"]}
+        ]
+      },
+      {
+        phase: "Phase 2",
+        title: "Cohesion & Flow",
+        subtitle: "Conectores, contraste e progressão de ideias",
+        objective: "Transformar frases soltas em parágrafos com fluxo.",
+        lesson: `
+          <h4>Objetivo do módulo</h4>
+          <p>Este módulo ensina a conectar ideias com lógica. A aluna aprende contraste, consequência, adição e mudança de direção.</p>
+          <h4>Conectores essenciais</h4>
+          <div class="word-bank">
+            <span class="word-chip">although</span><span class="word-chip">however</span><span class="word-chip">therefore</span><span class="word-chip">meanwhile</span><span class="word-chip">instead</span><span class="word-chip">otherwise</span><span class="word-chip">despite</span>
+          </div>
+          <div class="example-box"><strong>Weak:</strong> I was tired. I went out. I had fun. I regret it.<br><strong>Strong:</strong> Even though I was tired, I decided to go out. I ended up having fun, but I regretted staying out too late.</div>
+        `,
+        activities: [
+          {type:"Connector Repair", prompt:"Improve this text: 'I wanted to stay home. My friends invited me. I went. It was good.'", bank:["even though", "at first", "however", "in the end"]},
+          {type:"Fusion", prompt:"Turn these into one cohesive paragraph: 'I like working from home. It can be lonely. It saves time. I miss human interaction.'", bank:["On the one hand", "On the other hand", "while", "still"]},
+          {type:"Transition Challenge", prompt:"Write a paragraph where every sentence connects clearly to the previous one.", bank:["This is why", "At the same time", "As a result", "What makes this complicated"]}
+        ]
+      },
+      {
+        phase: "Phase 2",
+        title: "Writing With Depth",
+        subtitle: "Nuance, interpretação e pensamento mais elaborado",
+        objective: "Sair da escrita superficial e desenvolver ideias com mais profundidade.",
+        lesson: `
+          <h4>Objetivo do módulo</h4>
+          <p>A aluna aprende a transformar uma opinião simples em uma ideia mais interessante, com interpretação, exemplo e implicação.</p>
+          <div class="example-box"><strong>Simple:</strong> Some people are confident.<br><strong>Deeper:</strong> People who appear confident are often perceived as more competent, even when their actual ideas lack depth.</div>
+          <h4>Estrutura de profundidade</h4>
+          <ul>
+            <li>Observation: What do you notice?</li>
+            <li>Interpretation: What does it suggest?</li>
+            <li>Example: Where does it happen?</li>
+            <li>Implication: Why does it matter?</li>
+          </ul>
+        `,
+        activities: [
+          {type:"Interpretation", prompt:"Develop this idea: 'Some people speak very well but lack depth.'", bank:["appear", "are perceived as", "regardless of", "depth", "substance"]},
+          {type:"Perspective", prompt:"Write about social media from the perspective of a journalist, then from the perspective of a tired teenager.", bank:["According to", "It seems that", "Honestly", "The strange thing is"]},
+          {type:"Subtext", prompt:"Write a short dialogue where one person is upset but never says 'I'm upset'.", bank:["It's fine", "I just thought", "Never mind", "Forget it"]}
+        ]
+      },
+      {
+        phase: "Phase 3",
+        title: "Paragraph Architecture",
+        subtitle: "Topic sentence, desenvolvimento, exemplo e fechamento",
+        objective: "Construir parágrafos fortes e organizados.",
+        lesson: `
+          <h4>Arquitetura do parágrafo</h4>
+          <ul>
+            <li><strong>Topic sentence:</strong> apresenta a ideia central.</li>
+            <li><strong>Development:</strong> explica a ideia.</li>
+            <li><strong>Example:</strong> torna a ideia concreta.</li>
+            <li><strong>Closing thought:</strong> fecha com impacto.</li>
+          </ul>
+          <div class="example-box"><strong>Strong topic sentence:</strong> Modern life seems to normalize exhaustion to the point where constant stress is often mistaken for productivity.</div>
+        `,
+        activities: [
+          {type:"Paragraph Completion", prompt:"Continue this topic sentence: 'Learning a language requires more emotional tolerance than people usually expect.'", bank:["This is because", "For example", "Over time", "As a result"]},
+          {type:"Weak to Strong", prompt:"Improve this idea: 'Social media is bad because people spend too much time there.'", bank:["creates the illusion", "constant comparison", "quietly encourages", "connection"]},
+          {type:"Closing Thought", prompt:"Write 3 different closing sentences for a paragraph about discipline.", bank:["Ultimately", "In the long run", "What matters most", "This is what makes"]}
+        ]
+      },
+      {
+        phase: "Phase 3",
+        title: "Style Development",
+        subtitle: "Voz, tom e reescrita em estilos diferentes",
+        objective: "Criar controle de estilo e adaptar escrita ao contexto.",
+        lesson: `
+          <h4>Estilos de escrita</h4>
+          <p>A mesma ideia pode soar casual, profissional, emocional, jornalística, persuasiva ou analítica. Fluência escrita envolve escolher o tom certo.</p>
+          <div class="word-bank">
+            <span class="word-chip">conversational</span><span class="word-chip">professional</span><span class="word-chip">journalistic</span><span class="word-chip">reflective</span><span class="word-chip">persuasive</span><span class="word-chip">analytical</span>
+          </div>
+        `,
+        activities: [
+          {type:"Rewrite", prompt:"Rewrite this sentence in 4 tones: 'I don't agree with this decision.'", bank:["polite", "professional", "direct", "reflective"]},
+          {type:"Tone Shift", prompt:"Transform a rude message into a polite but firm message.", bank:["I understand", "However", "I would prefer", "Could we"]},
+          {type:"Voice", prompt:"Write a short paragraph about ambition with a reflective tone.", bank:["Sometimes", "I used to think", "What changed", "Maybe"]}
+        ]
+      },
+      {
+        phase: "Phase 4",
+        title: "Essays & Structured Writing",
+        subtitle: "Textos completos, argumentos e conclusão",
+        objective: "Produzir textos completos com introdução, desenvolvimento e conclusão.",
+        lesson: `
+          <h4>Estrutura de texto completo</h4>
+          <ul>
+            <li>Introduction: apresenta o tema.</li>
+            <li>Positioning: mostra a visão principal.</li>
+            <li>Argument 1: desenvolve uma ideia.</li>
+            <li>Argument 2: aprofunda ou contrasta.</li>
+            <li>Counterargument: reconhece outro lado.</li>
+            <li>Conclusion: fecha com síntese.</li>
+          </ul>
+        `,
+        activities: [
+          {type:"Guided Essay", prompt:"Write an opinion essay: 'Is working from home better than working in an office?'", bank:["In recent years", "One major advantage", "However", "Ultimately"]},
+          {type:"Counterargument", prompt:"Write a counterargument for this opinion: 'Technology makes people less social.'", bank:["While this may be true", "It is also important", "In many cases", "This depends on"]},
+          {type:"Conclusion", prompt:"Write a strong conclusion for an essay about modern loneliness.", bank:["Rather than", "The real challenge", "In the end", "What we need"]}
+        ]
+      },
+      {
+        phase: "Phase 4",
+        title: "Advanced Cohesion",
+        subtitle: "Nominalization, ênfase, compressão e sofisticação",
+        objective: "Elevar a escrita para um nível mais C1, compacto e sofisticado.",
+        lesson: `
+          <h4>Escrita mais sofisticada</h4>
+          <p>A aluna aprende a transformar estruturas simples em ideias mais compactas, abstratas e elegantes.</p>
+          <div class="example-box"><strong>Simple:</strong> People are very stressed nowadays.<br><strong>Advanced:</strong> Modern life seems to normalize exhaustion to the point where constant stress is often mistaken for productivity.</div>
+          <h4>Ferramentas</h4>
+          <ul>
+            <li>Nominalization: turning actions into concepts.</li>
+            <li>Emphasis structures: What matters is...</li>
+            <li>Compression: fewer words, stronger meaning.</li>
+          </ul>
+        `,
+        activities: [
+          {type:"Upgrade", prompt:"Make this sentence more sophisticated: 'People use phones too much.'", bank:["constant stimulation", "attention", "dependency", "modern habits"]},
+          {type:"Compression", prompt:"Rewrite a long paragraph into 3 strong sentences.", bank:["what makes this", "the tendency to", "increasingly", "rather than"]},
+          {type:"Expansion", prompt:"Turn this sentence into a full paragraph: 'Productivity can become a performance.'", bank:["appear", "pressure", "value", "exhaustion"]}
+        ]
+      },
+      {
+        phase: "Phase 5",
+        title: "Advanced Expression",
+        subtitle: "Subtexto, nuance e escrita abstrata",
+        objective: "Desenvolver escrita fluente com camadas de sentido.",
+        lesson: `
+          <h4>Objetivo</h4>
+          <p>Nesta fase, a aluna escreve sobre temas abstratos usando nuance, interpretação e controle emocional.</p>
+          <h4>Temas</h4>
+          <div class="word-bank">
+            <span class="word-chip">identity</span><span class="word-chip">loneliness</span><span class="word-chip">ambition</span><span class="word-chip">appearance vs reality</span><span class="word-chip">technology</span><span class="word-chip">emotional distance</span>
+          </div>
+        `,
+        activities: [
+          {type:"Abstract Writing", prompt:"Write about emotional distance without using the words 'sad', 'lonely' or 'hurt'.", bank:["quiet", "distance", "silence", "presence"]},
+          {type:"Layered Writing", prompt:"Write a paragraph with an explicit idea and a hidden emotional subtext.", bank:["on the surface", "underneath", "what remains", "barely"]},
+          {type:"Editorial", prompt:"Write a short editorial about why people confuse visibility with importance.", bank:["visibility", "importance", "attention", "value"]}
+        ]
+      },
+      {
+        phase: "Phase 5",
+        title: "Final Portfolio & Fluency Exam",
+        subtitle: "Portfólio, comparação e prova final",
+        objective: "Consolidar evolução e produzir textos finais em diferentes formatos.",
+        lesson: `
+          <h4>Entrega final</h4>
+          <p>A aluna monta um portfólio com textos antigos, versões revisadas e textos finais. O objetivo é ver evolução real.</p>
+          <h4>Prova final</h4>
+          <ul>
+            <li>Article</li>
+            <li>Opinion piece</li>
+            <li>Analytical reflection</li>
+            <li>Emotional writing</li>
+            <li>Professional writing</li>
+          </ul>
+          <div class="quote-box">A fluência escrita aparece quando a aluna consegue escrever com clareza, coesão, profundidade e estilo sem depender de tradução palavra por palavra.</div>
+        `,
+        activities: [
+          {type:"Final Article", prompt:"Write a 500-word article about how technology has changed the way people communicate emotionally.", bank:["In many ways", "At the same time", "What this reveals", "Ultimately"]},
+          {type:"Before & After", prompt:"Choose one old text and rewrite it with stronger cohesion, vocabulary and rhythm.", bank:["Although", "This suggests", "For instance", "What makes this important"]},
+          {type:"Portfolio Reflection", prompt:"Write a reflection about your evolution as a writer in English.", bank:["At the beginning", "I used to", "Now I can", "My next goal"]}
+        ]
+      }
+    ];
+
+    const prompts = [
+      "Write about a place that makes you feel calm, but focus on details instead of emotions.",
+      "Describe a small decision that changed the direction of your day.",
+      "Write about something people often misunderstand about you.",
+      "Explain why confidence can sometimes be misleading.",
+      "Write a paragraph that starts with: 'For a long time, I thought...'",
+      "Describe a conversation where the real message was hidden between the lines.",
+      "Write about the difference between being productive and feeling useful.",
+      "Write a short opinion piece about modern loneliness.",
+      "Describe a person who seems simple at first, but is actually complex.",
+      "Write about a routine that says something about who you are."
+    ];
+
+    let currentModule = 0;
+    let currentActivity = 0;
+    let timer = null;
+    let timerLeft = 300;
+
+    const completed = JSON.parse(localStorage.getItem("ewm_completed") || "[]");
+    const portfolio = JSON.parse(localStorage.getItem("ewm_portfolio") || "[]");
+
+    function init() {
+      renderModules();
+      selectModule(0);
+      newPrompt();
+      updateProgress();
+      renderPortfolio();
+      resetTimer();
+    }
+
+    function renderModules() {
+      const list = document.getElementById("moduleList");
+      list.innerHTML = "";
+      course.forEach((mod, index) => {
+        const btn = document.createElement("button");
+        btn.className = "module-btn" + (index === currentModule ? " active" : "");
+        btn.onclick = () => selectModule(index);
+        btn.innerHTML = `<small>${mod.phase} · Module ${index + 1}</small><strong>${completed.includes(index) ? "✓ " : ""}${mod.title}</strong><span style="color:var(--muted);font-size:.82rem;line-height:1.35;">${mod.subtitle}</span>`;
+        list.appendChild(btn);
+      });
+    }
+
+    function selectModule(index) {
+      currentModule = index;
+      currentActivity = 0;
+      const mod = course[index];
+      document.getElementById("phaseTag").textContent = `${mod.phase} · Module ${index + 1}`;
+      document.getElementById("lessonTitle").textContent = mod.title;
+      document.getElementById("lessonWindowTitle").textContent = `module_${index + 1}.html`;
+      document.getElementById("lessonBody").innerHTML = `
+        <p><strong>Objetivo:</strong> ${mod.objective}</p>
+        ${mod.lesson}
+      `;
+      renderModules();
+      renderActivityTabs();
+      renderActivity();
+      window.scrollTo({top:0, behavior:"smooth"});
+    }
+
+    function renderActivityTabs() {
+      const tabs = document.getElementById("activityTabs");
+      tabs.innerHTML = "";
+      course[currentModule].activities.forEach((act, index) => {
+        const btn = document.createElement("button");
+        btn.className = "tab-btn" + (index === currentActivity ? " active" : "");
+        btn.textContent = act.type;
+        btn.onclick = () => { currentActivity = index; renderActivityTabs(); renderActivity(); };
+        tabs.appendChild(btn);
+      });
+    }
+
+    function renderActivity() {
+      const act = course[currentModule].activities[currentActivity];
+      const area = document.getElementById("activityArea");
+      area.innerHTML = `
+        <div class="exercise-card">
+          <h4>${act.type}</h4>
+          <p>${act.prompt}</p>
+          <div class="word-bank">${act.bank.map(w => `<span class="word-chip">${w}</span>`).join("")}</div>
+          <textarea id="studentWriting" placeholder="Write your answer here..."></textarea>
+          <div class="mini-row">
+            <button class="btn" onclick="showFeedback()">Receber direção de revisão</button>
+            <button class="btn secondary" onclick="saveCurrentWriting()">Salvar no portfólio</button>
+            <button class="btn secondary" onclick="clearWriting()">Limpar</button>
+          </div>
+          <div class="feedback" id="feedbackBox"></div>
+        </div>
+        <div class="exercise-card">
+          <h4>Rubrica de autoavaliação</h4>
+          ${rubricHTML()}
+        </div>
+        <div class="exercise-card">
+          <h4>Checklist antes de finalizar</h4>
+          <div id="challengeList">
+            ${challengeHTML("My sentences are clear and not directly translated from Portuguese.")}
+            ${challengeHTML("I connected my ideas with at least one transition.")}
+            ${challengeHTML("I included an example or explanation.")}
+            ${challengeHTML("I revised one weak sentence.")}
+            ${challengeHTML("The tone matches the task.")}
+          </div>
+        </div>
+      `;
+    }
+
+    function rubricHTML() {
+      const items = ["Clarity", "Cohesion", "Naturalness", "Vocabulary", "Depth", "Rhythm", "Style"];
+      return items.map(item => `
+        <div class="rubric-item">
+          <span>${item}</span>
+          <select onchange="calculateRubric()" class="rubricSelect" style="width:76px;padding:7px;border-radius:10px;border:1px solid var(--line);">
+            <option value="0">--</option>
+            <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option>
+            <option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option>
+          </select>
+        </div>
+      `).join("") + `<div class="rubric-item"><strong>Total</strong><span class="rubric-score" id="rubricTotal">0/70</span></div>`;
+    }
+
+    function challengeHTML(text) {
+      return `<div class="challenge-card"><label><input type="checkbox" onchange="this.closest('.challenge-card').classList.toggle('complete', this.checked)"><span>${text}</span></label></div>`;
+    }
+
+    function calculateRubric() {
+      const selects = document.querySelectorAll(".rubricSelect");
+      let total = 0;
+      selects.forEach(s => total += Number(s.value));
+      document.getElementById("rubricTotal").textContent = `${total}/70`;
+    }
+
+    function showFeedback() {
+      const text = document.getElementById("studentWriting").value.trim();
+      const box = document.getElementById("feedbackBox");
+      const wordCount = text ? text.split(/\s+/).length : 0;
+      let feedback = "";
+      if (!text) {
+        feedback = "Escreva uma resposta primeiro. Depois revise pensando em clareza, conexão entre ideias e naturalidade.";
+      } else {
+        feedback = `<strong>Direção de revisão:</strong><br>`;
+        feedback += `Você escreveu aproximadamente <strong>${wordCount} palavras</strong>.<br><br>`;
+        if (wordCount < 45) feedback += "• Expanda a ideia com um exemplo concreto ou uma explicação extra.<br>";
+        if (!/(although|however|because|therefore|while|even though|despite|as a result|on the other hand|in the end)/i.test(text)) feedback += "• Adicione pelo menos um conector para melhorar o fluxo.<br>";
+        if (/(very very|I think that I|people is|I have \d+ years|make sense for me)/i.test(text)) feedback += "• Procure uma estrutura mais natural em vez de uma tradução direta.<br>";
+        feedback += "• Escolha uma frase e reescreva de forma mais precisa, com vocabulário mais forte.<br>";
+        feedback += "• Leia em voz alta: se travar muito, divida a frase ou melhore o ritmo.";
+      }
+      box.innerHTML = feedback;
+      box.style.display = "block";
+    }
+
+    function clearWriting() {
+      document.getElementById("studentWriting").value = "";
+      document.getElementById("feedbackBox").style.display = "none";
+    }
+
+    function saveCurrentWriting() {
+      const text = document.getElementById("studentWriting").value.trim();
+      const title = `${course[currentModule].title} — ${course[currentModule].activities[currentActivity].type}`;
+      saveSpecificText(title, text);
+    }
+
+    function saveSpecificText(title, text) {
+      if (!text || text.trim().length < 2) {
+        alert("Escreva algo antes de salvar.");
+        return;
+      }
+      portfolio.unshift({ title, text: text.trim(), date: new Date().toLocaleString("pt-BR") });
+      localStorage.setItem("ewm_portfolio", JSON.stringify(portfolio));
+      renderPortfolio();
+      alert("Texto salvo no portfólio!");
+    }
+
+    function renderPortfolio() {
+      const list = document.getElementById("portfolioList");
+      if (!list) return;
+      if (!portfolio.length) {
+        list.innerHTML = `<div class="quote-box">Nenhum texto salvo ainda.</div>`;
+        return;
+      }
+      list.innerHTML = portfolio.map((item, index) => `
+        <div class="portfolio-item">
+          <strong>${item.title}</strong><br>
+          <small>${item.date}</small>
+          <p>${item.text.slice(0, 380)}${item.text.length > 380 ? "..." : ""}</p>
+          <div class="mini-row"><button class="btn secondary" onclick="deletePortfolioItem(${index})">Excluir</button></div>
+        </div>
+      `).join("");
+    }
+
+    function deletePortfolioItem(index) {
+      portfolio.splice(index, 1);
+      localStorage.setItem("ewm_portfolio", JSON.stringify(portfolio));
+      renderPortfolio();
+    }
+
+    function markCurrentComplete() {
+      if (!completed.includes(currentModule)) completed.push(currentModule);
+      localStorage.setItem("ewm_completed", JSON.stringify(completed));
+      renderModules();
+      updateProgress();
+    }
+
+    function updateProgress() {
+      const percentage = Math.round((completed.length / course.length) * 100);
+      document.getElementById("progressText").textContent = `${percentage}%`;
+      document.getElementById("progressFill").style.width = `${percentage}%`;
+    }
+
+    function newPrompt() {
+      const prompt = prompts[Math.floor(Math.random() * prompts.length)];
+      document.getElementById("dailyPrompt").textContent = prompt;
+    }
+
+    function openModal(id) {
+      document.getElementById(id).style.display = "flex";
+      if (id === "portfolioModal") renderPortfolio();
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).style.display = "none";
+    }
+
+    function startTimer() {
+      clearInterval(timer);
+      timer = setInterval(() => {
+        timerLeft--;
+        renderTimer();
+        if (timerLeft <= 0) {
+          clearInterval(timer);
+          alert("Tempo finalizado! Agora revise o texto.");
+        }
+      }, 1000);
+    }
+
+    function resetTimer() {
+      clearInterval(timer);
+      timerLeft = Number(document.getElementById("timerSelect").value);
+      renderTimer();
+    }
+
+    function renderTimer() {
+      const min = String(Math.floor(timerLeft / 60)).padStart(2, "0");
+      const sec = String(timerLeft % 60).padStart(2, "0");
+      document.getElementById("timerDisplay").textContent = `${min}:${sec}`;
+    }
+
+    document.addEventListener("change", (e) => {
+      if (e.target.id === "timerSelect") resetTimer();
+    });
+
+    init();
+  </script>
+</body>
+</html>
