@@ -724,9 +724,10 @@
   </div>
 
   <script>
-    const SUPABASE_URL = "COLE_AQUI_SUA_SUPABASE_URL";
-    const SUPABASE_ANON_KEY = "COLE_AQUI_SUA_SUPABASE_ANON_KEY";
-    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+   const SUPABASE_URL = "https://pgdanuifukzisyyummpz.supabase.co";
+
+const SUPABASE_ANON_KEY = "sb_publishable_81NM6F08rsXXSCgjWl4iSg_v99cdVpo";
+    const supabaseClient = supabase.createClient("https://pgdanuifukzisyyummpz.supabase.co", "sb_publishable_81NM6F08rsXXSCgjWl4iSg_v99cdVpo");
 
     const course = [
       { phase: "Phase 1", title: "Sentence Foundations", subtitle: "Frases naturais e chunks básicos", objective: "Escrever frases claras sem traduzir literalmente do português.", lesson: `<h4>Objetivo</h4><p>A aluna aprende a montar frases naturais, com ordem correta, informação suficiente e blocos úteis.</p><h4>Padrões essenciais</h4><ul><li>I find it difficult to...</li><li>I tend to...</li><li>One thing I noticed is...</li><li>I ended up...</li><li>It made me feel...</li></ul><div class="box"><strong>Weak:</strong> I have 24 years and like very much music.<br><strong>Strong:</strong> I’m 24 years old and I really like music.</div>`, activities: [{type:"Reconstruction", prompt:"Rewrite naturally: 'I have difficult to speak because I think much in Portuguese.'", bank:["I find it difficult to", "because", "I tend to"]},{type:"Expansion", prompt:"Expand this sentence: 'I studied English yesterday.'", bank:["after work", "for a while", "because", "even though"]},{type:"Mini Writing", prompt:"Write 6 sentences about your routine using at least 3 chunks from the lesson.", bank:["I usually", "I tend to", "One thing I noticed", "At some point"]}] },
