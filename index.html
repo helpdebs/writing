@@ -439,7 +439,40 @@
 
     .metric {
       display: grid;
-      grid-template-columns: 110px 1fr 38px;
+      grid-template-columns: 140px 1fr 38px;
+      gap: 8px;
+      align-items: center;
+      padding: 9px 0;
+      border-bottom: 1px solid rgba(90, 70, 130, .13);
+      font-size: .9rem;
+      position: relative;
+      cursor: help;
+    }
+
+    .metric:hover {
+      background: rgba(122, 92, 255, .05);
+      border-radius: 12px;
+      padding-left: 8px;
+      padding-right: 8px;
+    }
+
+    .metric:hover::after {
+      content: attr(data-tip);
+      position: absolute;
+      left: 10px;
+      right: 10px;
+      top: calc(100% + 6px);
+      z-index: 10;
+      background: #241b38;
+      color: white;
+      border-radius: 14px;
+      padding: 10px 12px;
+      font-size: .82rem;
+      line-height: 1.45;
+      box-shadow: var(--shadow);
+    }
+
+    .metric {
       gap: 8px;
       align-items: center;
       padding: 8px 0;
@@ -576,7 +609,7 @@
               <h2>Write clearly. Think deeply. Sound natural.</h2>
               <p>Um treinamento de escrita com lições, drills, desafios, timer, portfólio, avaliação automática e resultado salvo por aluna.</p>
               <div class="btn-row">
-                <button class="btn" onclick="selectModule(0)">Começar</button>
+                <button class="btn" onclick="startCourse()">Começar</button>
                 <button class="btn secondary" onclick="openModal('diagnosticModal')">Diagnóstico</button>
                 <button class="btn secondary" onclick="openModal('portfolioModal')">Portfólio</button>
               </div>
@@ -691,11 +724,9 @@
   </div>
 
   <script>
-const SUPABASE_URL = "https://pgdanuifukzisyyummpz.supabase.co";
-
-const SUPABASE_ANON_KEY = "sb_publishable_81NM6F08rsXXSCgjWl4iSg_v99cdVpo";
-    
-    const supabaseClient = supabase.createClient("https://pgdanuifukzisyyummpz.supabase.co", "sb_publishable_81NM6F08rsXXSCgjWl4iSg_v99cdVpo");
+    const SUPABASE_URL = "COLE_AQUI_SUA_SUPABASE_URL";
+    const SUPABASE_ANON_KEY = "COLE_AQUI_SUA_SUPABASE_ANON_KEY";
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     const course = [
       { phase: "Phase 1", title: "Sentence Foundations", subtitle: "Frases naturais e chunks básicos", objective: "Escrever frases claras sem traduzir literalmente do português.", lesson: `<h4>Objetivo</h4><p>A aluna aprende a montar frases naturais, com ordem correta, informação suficiente e blocos úteis.</p><h4>Padrões essenciais</h4><ul><li>I find it difficult to...</li><li>I tend to...</li><li>One thing I noticed is...</li><li>I ended up...</li><li>It made me feel...</li></ul><div class="box"><strong>Weak:</strong> I have 24 years and like very much music.<br><strong>Strong:</strong> I’m 24 years old and I really like music.</div>`, activities: [{type:"Reconstruction", prompt:"Rewrite naturally: 'I have difficult to speak because I think much in Portuguese.'", bank:["I find it difficult to", "because", "I tend to"]},{type:"Expansion", prompt:"Expand this sentence: 'I studied English yesterday.'", bank:["after work", "for a while", "because", "even though"]},{type:"Mini Writing", prompt:"Write 6 sentences about your routine using at least 3 chunks from the lesson.", bank:["I usually", "I tend to", "One thing I noticed", "At some point"]}] },
@@ -905,7 +936,34 @@ const SUPABASE_ANON_KEY = "sb_publishable_81NM6F08rsXXSCgjWl4iSg_v99cdVpo";
       renderModules();
       renderActivityTabs();
       renderActivity();
-      if (scroll) window.scrollTo({ top: 0, behavior: "smooth" });
+      if (scroll) scrollToLesson();
+    }
+
+    function startCourse() {
+      selectModule(0, false);
+      setTimeout(() => {
+        scrollToLesson();
+        pulsePracticeLab();
+      }, 80);
+    }
+
+    function scrollToLesson() {
+      const lessonTitle = document.getElementById("lessonTitle");
+      if (lessonTitle) {
+        lessonTitle.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
+
+    function pulsePracticeLab() {
+      const practice = document.getElementById("activityArea");
+      if (!practice) return;
+      practice.style.transition = "box-shadow .25s ease, transform .25s ease";
+      practice.style.boxShadow = "0 0 0 5px rgba(122, 92, 255, .18)";
+      practice.style.transform = "scale(1.01)";
+      setTimeout(() => {
+        practice.style.boxShadow = "none";
+        practice.style.transform = "scale(1)";
+      }, 900);
     }
 
     function renderActivityTabs() {
@@ -928,6 +986,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_81NM6F08rsXXSCgjWl4iSg_v99cdVpo";
           <p>${act.prompt}</p>
           <div class="word-bank">${act.bank.map(w => `<span class="chip">${w}</span>`).join("")}</div>
           <textarea id="studentWriting" placeholder="Write your answer here..."></textarea>
+          <div id="savedDraftNotice" class="box" style="display:none;background:#fff;">Resposta anterior carregada.</div>
           <div class="btn-row">
             <button class="btn" onclick="evaluateCurrentWriting()">Avaliar e salvar</button>
             <button class="btn secondary" onclick="saveCurrentWriting()">Salvar sem avaliar</button>
@@ -936,6 +995,50 @@ const SUPABASE_ANON_KEY = "sb_publishable_81NM6F08rsXXSCgjWl4iSg_v99cdVpo";
           <div class="result-panel" id="evaluationResult"></div>
         </div>
       `;
+      loadLatestActivityAnswer();
+    }
+
+    async function loadLatestActivityAnswer() {
+      if (!currentUser) return;
+      const textarea = $("studentWriting");
+      if (!textarea) return;
+
+      const { data, error } = await supabaseClient
+        .from("writing_submissions")
+        .select("content, score, level_label, metrics, created_at")
+        .eq("user_id", currentUser.id)
+        .eq("module_index", currentModule)
+        .eq("activity_index", currentActivity)
+        .eq("is_diagnostic", false)
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (error) {
+        console.error(error);
+        return;
+      }
+
+      if (data?.content && $("studentWriting")) {
+        $("studentWriting").value = data.content;
+        const notice = $("savedDraftNotice");
+        if (notice) {
+          notice.style.display = "block";
+          notice.innerHTML = `Resposta anterior carregada do banco. ${data.score ? `Última nota: <strong>${data.score}%</strong> · ${data.level_label}` : "Ainda sem avaliação."}`;
+        }
+
+        if (data.score && data.metrics) {
+          renderEvaluation({
+            total: data.score,
+            level: data.level_label,
+            metrics: data.metrics,
+            words: data.content.split(/\s+/).filter(Boolean).length,
+            sentences: data.content.split(/[.!?]+/).map(s => s.trim()).filter(Boolean).length,
+            connectorCount: 0,
+            unnaturalCount: 0
+          }, "evaluationResult");
+        }
+      }
     }
 
     function evaluateText(text, activity) {
@@ -959,15 +1062,47 @@ const SUPABASE_ANON_KEY = "sb_publishable_81NM6F08rsXXSCgjWl4iSg_v99cdVpo";
       const naturalness = clamp(Math.round(7 - unnaturalCount * 2 + (lower.includes("i tend to") || lower.includes("ended up") || lower.includes("it made me") ? 2 : 0) + (avgSentence > 22 ? -1 : 1)));
       const vocabulary = clamp(Math.round((unique / Math.max(words.length, 1)) * 8 + advancedCount * 1.2 + requiredBankUsed));
       const depth = clamp(Math.round(depthCount * 2 + (words.length >= 80 ? 3 : words.length >= 45 ? 2 : 1) + (lower.includes("example") || lower.includes("for instance") ? 1 : 0)));
-      const rhythm = clamp(Math.round((sentences.length >= 3 ? 3 : 1) + (avgSentence >= 8 && avgSentence <= 24 ? 4 : 2) + (/[;:—]/.test(clean) ? 1 : 0) + (words.length > 0 ? 1 : 0)));
+      const structure = clamp(Math.round(
+        (sentences.length >= 3 ? 3 : sentences.length) +
+        (words.length >= 80 ? 3 : words.length >= 45 ? 2 : 1) +
+        (/(for example|for instance|such as)/i.test(clean) ? 1 : 0) +
+        (/(because|therefore|as a result|this means|this suggests)/i.test(clean) ? 1 : 0) +
+        (/(however|although|even though|on the other hand|while)/i.test(clean) ? 1 : 0)
+      ));
       const task = clamp(Math.round(requiredBankUsed * 2 + (words.length >= 40 ? 3 : 1) + (clean.includes("?") ? 0 : 1) + (activity.prompt.toLowerCase().includes("paragraph") && sentences.length >= 3 ? 2 : 0)));
-      const metrics = { clarity, cohesion, naturalness, vocabulary, depth, rhythm, task };
+      const metrics = { clarity, cohesion, naturalness, vocabulary, depth, structure, task };
       const total = Math.round(Object.values(metrics).reduce((a,b) => a + b, 0) / 7 * 10);
       const level = total >= 85 ? "Advanced writing" : total >= 70 ? "Strong intermediate writing" : total >= 50 ? "Developing writing" : "Needs foundation work";
       return { words: words.length, sentences: sentences.length, avgSentence, connectorCount, unnaturalCount, metrics, total, level };
     }
 
     function clamp(n) { return Math.max(0, Math.min(10, n)); }
+
+    function buildMetricTips(data) {
+      const tips = {};
+      tips.clarity = data.metrics.clarity >= 9
+        ? "Clareza alta: mantenha frases diretas e evite ideias demais na mesma frase."
+        : "Para aumentar clareza: divida frases longas, deixe o sujeito claro e explique exatamente quem fez o quê. Evite tradução literal.";
+      tips.cohesion = data.metrics.cohesion >= 9
+        ? "Coesão alta: suas ideias estão bem conectadas."
+        : "Para aumentar coesão: use conectores com função real. Ex.: because para causa, however para contraste, therefore/as a result para consequência, for example para exemplo.";
+      tips.naturalness = data.metrics.naturalness >= 9
+        ? "Naturalidade alta: a escrita parece pouco traduzida."
+        : "Para soar mais natural: prefira chunks como I tend to, I ended up, it made me feel, one thing I noticed is. Revise estruturas como people is, depends of, I have difficult.";
+      tips.vocabulary = data.metrics.vocabulary >= 9
+        ? "Vocabulário forte: boa variedade e escolhas mais específicas."
+        : "Para aumentar vocabulário: troque palavras genéricas por termos mais precisos. Ex.: good → meaningful/useful/effective; bad → harmful/limited/problematic.";
+      tips.depth = data.metrics.depth >= 9
+        ? "Profundidade alta: você desenvolveu interpretação, causa e consequência."
+        : "Para aumentar profundidade: depois da opinião, responda: por que isso acontece? o que isso revela? qual exemplo prova isso? qual consequência isso gera?";
+      tips.structure = data.metrics.structure >= 9
+        ? "Estrutura forte: o texto tem ideia, desenvolvimento e fechamento."
+        : "Para aumentar estrutura: organize em 3 partes: ideia principal + explicação + exemplo/consequência. Se for parágrafo, escreva pelo menos 3 frases conectadas.";
+      tips.task = data.metrics.task >= 9
+        ? "Tarefa bem cumprida: você respondeu ao prompt e usou bem os recursos pedidos."
+        : "Para cumprir melhor a tarefa: responda exatamente ao prompt, use algumas palavras do banco e confira se o texto faz o que a atividade pediu.";
+      return tips;
+    }
 
     function renderEvaluation(data, targetId) {
       const tips = [];
@@ -976,9 +1111,11 @@ const SUPABASE_ANON_KEY = "sb_publishable_81NM6F08rsXXSCgjWl4iSg_v99cdVpo";
       if (data.unnaturalCount > 0) tips.push("Revise possíveis traduções literais ou estruturas pouco naturais.");
       if (data.metrics.depth < 6) tips.push("Inclua interpretação: o que essa ideia revela, sugere ou causa?");
       if (data.metrics.vocabulary < 6) tips.push("Troque palavras genéricas por termos mais precisos.");
+      if (data.metrics.structure < 6) tips.push("Organize melhor: ideia principal + explicação + exemplo ou consequência.");
       if (!tips.length) tips.push("Boa base. Agora reescreva buscando mais ritmo, precisão e impacto.");
-      const metricLabels = { clarity: "Clareza", cohesion: "Coesão", naturalness: "Naturalidade", vocabulary: "Vocabulário", depth: "Profundidade", rhythm: "Ritmo", task: "Tarefa" };
-      const metricsHTML = Object.entries(data.metrics).map(([key, value]) => `<div class="metric"><strong>${metricLabels[key]}</strong><div class="mini-bar"><div class="mini-fill" style="width:${value * 10}%"></div></div><span>${value}/10</span></div>`).join("");
+      const metricLabels = { clarity: "Clareza", cohesion: "Coesão", naturalness: "Naturalidade", vocabulary: "Vocabulário", depth: "Profundidade", structure: "Estrutura", task: "Tarefa" };
+      const metricTips = buildMetricTips(data);
+      const metricsHTML = Object.entries(data.metrics).map(([key, value]) => `<div class="metric" data-tip="${metricTips[key]}"><strong>${metricLabels[key]}</strong><div class="mini-bar"><div class="mini-fill" style="width:${value * 10}%"></div></div><span>${value}/10</span></div>`).join("");
       const panel = $(targetId);
       panel.innerHTML = `<div class="score-head"><div><strong>Resultado do curso</strong><br><span>${data.level}</span></div><div class="score-number">${data.total}%</div></div>${metricsHTML}<div class="box" style="background:white;margin-top:12px;"><strong>Diagnóstico:</strong> ${data.words} palavras, ${data.sentences} frases, ${data.connectorCount} conector(es) detectado(s).</div><strong>Próximos passos:</strong><ul>${tips.map(t => `<li>${t}</li>`).join("")}</ul>`;
       panel.style.display = "block";
