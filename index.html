@@ -725,8 +725,7 @@
 
   <script>
     const SUPABASE_URL = "https://pgdanuifukzisyyummpz.supabase.co";
-
-const SUPABASE_ANON_KEY = "sb_publishable_81NM6F08rsXXSCgjWl4iSg_v99cdVpo";
+    const SUPABASE_ANON_KEY = "sb_publishable_81NM6F08rsXXSCgjWl4iSg_v99cdVpo";
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     const course = [
@@ -1081,7 +1080,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_81NM6F08rsXXSCgjWl4iSg_v99cdVpo";
             total: data.score,
             level: data.level_label,
             metrics: data.metrics,
-            words: data.content.split(/\\s+/).filter(Boolean).length,
+            words: data.content.split(/\s+/).filter(Boolean).length,
             sentences: data.content.split(/[.!?]+/).map(s => s.trim()).filter(Boolean).length,
             connectorCount: 0,
             unnaturalCount: 0
@@ -1111,10 +1110,20 @@ const SUPABASE_ANON_KEY = "sb_publishable_81NM6F08rsXXSCgjWl4iSg_v99cdVpo";
       const naturalness = clamp(Math.round(7 - unnaturalCount * 2 + (lower.includes("i tend to") || lower.includes("ended up") || lower.includes("it made me") ? 2 : 0) + (avgSentence > 22 ? -1 : 1)));
       const vocabulary = clamp(Math.round((unique / Math.max(words.length, 1)) * 8 + advancedCount * 1.2 + requiredBankUsed));
       const depth = clamp(Math.round(depthCount * 2 + (words.length >= 80 ? 3 : words.length >= 45 ? 2 : 1) + (lower.includes("example") || lower.includes("for instance") ? 1 : 0)));
-      const rhythm = clamp(Math.round((sentences.length >= 3 ? 3 : 1) + (avgSentence >= 8 && avgSentence <= 24 ? 4 : 2) + (/[;:—]/.test(clean) ? 1 : 0) + (words.length > 0 ? 1 : 0)));
+      const structure = clamp(Math.round(
+        (sentences.length >= 3 ? 3 : sentences.length) +
+        (words.length >= 80 ? 3 : words.length >= 45 ? 2 : 1) +
+        (/(for example|for instance|such as)/i.test(clean) ? 1 : 0) +
+        (/(because|therefore|as a result|this means|this suggests)/i.test(clean) ? 1 : 0) +
+        (/(however|although|even though|on the other hand|while)/i.test(clean) ? 1 : 0)
+      ));
       const task = clamp(Math.round(requiredBankUsed * 2 + (words.length >= 40 ? 3 : 1) + (clean.includes("?") ? 0 : 1) + (activity.prompt.toLowerCase().includes("paragraph") && sentences.length >= 3 ? 2 : 0)));
-      const metrics = { clarity, cohesion, naturalness, vocabulary, depth, rhythm, task };
-      const total = Math.round(Object.values(metrics).reduce((a,b) => a + b, 0) / 7 * 10);
+      const metrics = {
+        clarity: Math.round((clarity + naturalness) / 2),
+        cohesion: Math.round((cohesion + structure) / 2),
+        depth: Math.round((depth + vocabulary + task) / 3)
+      };
+      const total = Math.round(Object.values(metrics).reduce((a,b) => a + b, 0) / 3 * 10);
       const level = total >= 85 ? "Advanced writing" : total >= 70 ? "Strong intermediate writing" : total >= 50 ? "Developing writing" : "Needs foundation work";
       return { words: words.length, sentences: sentences.length, avgSentence, connectorCount, unnaturalCount, metrics, total, level };
     }
@@ -1124,39 +1133,49 @@ const SUPABASE_ANON_KEY = "sb_publishable_81NM6F08rsXXSCgjWl4iSg_v99cdVpo";
     function buildMetricTips(data) {
       const tips = {};
       tips.clarity = data.metrics.clarity >= 9
-        ? "Clareza alta: mantenha frases diretas e evite ideias demais na mesma frase."
-        : "Para aumentar clareza: divida frases longas, deixe o sujeito claro e explique exatamente quem fez o quê. Evite tradução literal.";
+        ? "Sua escrita está clara e natural. Continue evitando tradução literal e mantendo frases objetivas."
+        : "Para melhorar clareza e naturalidade: use frases mais diretas, evite tradução literal e utilize chunks naturais como I tend to, I ended up, It made me feel.";
+
       tips.cohesion = data.metrics.cohesion >= 9
-        ? "Coesão alta: suas ideias estão bem conectadas."
-        : "Para aumentar coesão: use conectores com função real. Ex.: because para causa, however para contraste, therefore/as a result para consequência, for example para exemplo.";
-      tips.naturalness = data.metrics.naturalness >= 9
-        ? "Naturalidade alta: a escrita parece pouco traduzida."
-        : "Para soar mais natural: prefira chunks como I tend to, I ended up, it made me feel, one thing I noticed is. Revise estruturas como people is, depends of, I have difficult.";
-      tips.vocabulary = data.metrics.vocabulary >= 9
-        ? "Vocabulário forte: boa variedade e escolhas mais específicas."
-        : "Para aumentar vocabulário: troque palavras genéricas por termos mais precisos. Ex.: good → meaningful/useful/effective; bad → harmful/limited/problematic.";
+        ? "As ideias estão muito bem conectadas e organizadas."
+        : "Para melhorar coesão e estrutura: conecte melhor as ideias usando because, however, although, therefore e organize o texto em ideia → explicação → exemplo.";
+
       tips.depth = data.metrics.depth >= 9
-        ? "Profundidade alta: você desenvolveu interpretação, causa e consequência."
-        : "Para aumentar profundidade: depois da opinião, responda: por que isso acontece? o que isso revela? qual exemplo prova isso? qual consequência isso gera?";
-      tips.structure = data.metrics.structure >= 9
-        ? "Estrutura forte: o texto tem ideia, desenvolvimento e fechamento."
-        : "Para aumentar estrutura: organize em 3 partes: ideia principal + explicação + exemplo/consequência. Se for parágrafo, escreva pelo menos 3 frases conectadas.";
-      tips.task = data.metrics.task >= 9
-        ? "Tarefa bem cumprida: você respondeu ao prompt e usou bem os recursos pedidos."
-        : "Para cumprir melhor a tarefa: responda exatamente ao prompt, use algumas palavras do banco e confira se o texto faz o que a atividade pediu.";
+        ? "Seu texto demonstra desenvolvimento e interpretação fortes."
+        : "Para aumentar profundidade: explique causas, consequências e interpretações. Depois de uma opinião, pergunte: por quê? o que isso revela? qual exemplo comprova isso?";
       return tips;
     }
 
+    function normalizeEvaluationData(data) {
+      if (!data || !data.metrics) return data;
+      const m = data.metrics;
+      const hasOnlyThree = Object.prototype.hasOwnProperty.call(m, "clarity") && Object.prototype.hasOwnProperty.call(m, "cohesion") && Object.prototype.hasOwnProperty.call(m, "depth") && Object.keys(m).length <= 3;
+      if (hasOnlyThree) return data;
+
+      const normalized = {
+        clarity: Math.round(((m.clarity ?? 0) + (m.naturalness ?? m.clarity ?? 0)) / 2),
+        cohesion: Math.round(((m.cohesion ?? 0) + (m.structure ?? m.cohesion ?? 0)) / 2),
+        depth: Math.round(((m.depth ?? 0) + (m.vocabulary ?? m.depth ?? 0) + (m.task ?? m.depth ?? 0)) / 3)
+      };
+
+      data.metrics = normalized;
+      data.total = Math.round(Object.values(normalized).reduce((a,b) => a + b, 0) / 3 * 10);
+      return data;
+    }
+
     function renderEvaluation(data, targetId) {
+      data = normalizeEvaluationData(data);
       const tips = [];
       if (data.words < 45) tips.push("Expanda o texto com exemplo, contexto ou consequência.");
       if (data.connectorCount < 1) tips.push("Adicione conectores como although, however, because, while ou therefore.");
       if (data.unnaturalCount > 0) tips.push("Revise possíveis traduções literais ou estruturas pouco naturais.");
       if (data.metrics.depth < 6) tips.push("Inclua interpretação: o que essa ideia revela, sugere ou causa?");
-      if (data.metrics.vocabulary < 6) tips.push("Troque palavras genéricas por termos mais precisos.");
-      if (data.metrics.structure < 6) tips.push("Organize melhor: ideia principal + explicação + exemplo ou consequência.");
-      if (!tips.length) tips.push("Boa base. Agora reescreva buscando mais ritmo, precisão e impacto.");
-      const metricLabels = { clarity: "Clareza", cohesion: "Coesão", naturalness: "Naturalidade", vocabulary: "Vocabulário", depth: "Profundidade", structure: "Estrutura", task: "Tarefa" };
+      if (!tips.length) tips.push("Boa base. Agora reescreva buscando mais clareza, conexão entre ideias e desenvolvimento.");
+      const metricLabels = {
+        clarity: "Clareza linguística",
+        cohesion: "Coesão textual",
+        depth: "Desenvolvimento da ideia"
+      };
       const metricTips = buildMetricTips(data);
       const metricsHTML = Object.entries(data.metrics).map(([key, value]) => `<div class="metric" data-tip="${metricTips[key]}"><strong>${metricLabels[key]}</strong><div class="mini-bar"><div class="mini-fill" style="width:${value * 10}%"></div></div><span>${value}/10</span></div>`).join("");
       const panel = $(targetId);
