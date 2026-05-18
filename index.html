@@ -3,1326 +3,1602 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>English Writing Mastery | Help.debs</title>
+  <title>Writing Unlocked | Help.debs</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #f7f3ff;
-      --panel: #ffffff;
-      --text: #241b38;
-      --muted: #6d6380;
-      --primary: #7a5cff;
-      --primary-dark: #5338d6;
-      --pink: #ff9fd6;
-      --blue: #a9e6ff;
-      --yellow: #edff86;
-      --green: #c9ffd8;
-      --danger: #ff6f91;
-      --line: #d8cdf4;
-      --soft: #f6f0ff;
-      --shadow: 0 16px 36px rgba(63, 39, 123, .16);
-      --radius: 22px;
-      --radius-sm: 15px;
-      --mono: "Courier New", monospace;
-      --font: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --ink: #0e0c0a;
+      --paper: #faf8f4;
+      --cream: #f2ede3;
+      --warm: #e8dfc8;
+      --accent: #c84b2f;
+      --accent2: #2f7ec8;
+      --gold: #d4922a;
+      --muted: #7a6f62;
+      --line: #d6ceba;
+      --radius: 4px;
+      --serif: "Instrument Serif", Georgia, serif;
+      --mono: "DM Mono", monospace;
+      --sans: "Outfit", sans-serif;
     }
 
-    * { box-sizing: border-box; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
 
     body {
-      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--sans);
       min-height: 100vh;
-      background:
-        radial-gradient(circle at 0 0, rgba(255, 159, 214, .32), transparent 28%),
-        radial-gradient(circle at 100% 0, rgba(169, 230, 255, .46), transparent 30%),
-        linear-gradient(135deg, var(--bg), #fff9fd);
-      color: var(--text);
-      font-family: var(--font);
     }
 
-    button, textarea, input, select { font-family: inherit; }
-    button { -webkit-tap-highlight-color: transparent; }
-    h1, h2, h3, h4, p { overflow-wrap: anywhere; }
-
-    .auth-screen {
+    /* ── AUTH ── */
+    .auth-wrap {
       min-height: 100vh;
       display: grid;
       place-items: center;
-      padding: 18px;
+      background:
+        repeating-linear-gradient(0deg, transparent, transparent 39px, var(--warm) 39px, var(--warm) 40px),
+        repeating-linear-gradient(90deg, transparent, transparent 39px, var(--warm) 39px, var(--warm) 40px),
+        var(--paper);
+      padding: 20px;
     }
 
     .auth-card {
-      width: min(940px, 100%);
+      width: min(860px, 100%);
+      background: var(--paper);
+      border: 2px solid var(--ink);
+      box-shadow: 8px 8px 0 var(--ink);
       display: grid;
       grid-template-columns: 1fr 1fr;
-      background: rgba(255,255,255,.95);
-      border: 2px solid var(--line);
-      border-radius: 30px;
-      box-shadow: var(--shadow);
-      overflow: hidden;
     }
 
-    .auth-hero {
-      padding: clamp(22px, 5vw, 42px);
-      background:
-        linear-gradient(135deg, rgba(122,92,255,.92), rgba(255,159,214,.88)),
-        repeating-linear-gradient(45deg, rgba(255,255,255,.18) 0 8px, transparent 8px 16px);
-      color: white;
+    .auth-left {
+      background: var(--ink);
+      color: var(--paper);
+      padding: clamp(24px,5vw,48px);
     }
 
-    .auth-hero h1 {
-      font-size: clamp(2.1rem, 5vw, 4.2rem);
-      line-height: .92;
-      letter-spacing: -.07em;
-      margin: 12px 0;
-    }
-
-    .auth-hero p { line-height: 1.65; color: rgba(255,255,255,.9); }
-
-    .auth-form {
-      padding: clamp(22px, 5vw, 42px);
-    }
-
-    .auth-tabs { display: flex; gap: 8px; margin-bottom: 16px; }
-
-    .app {
-      width: min(1240px, 100%);
-      margin: 0 auto;
-      padding: 18px;
-      display: none;
-    }
-
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-      margin-bottom: 18px;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      min-width: 0;
-    }
-
-    .logo {
-      width: 54px;
-      height: 54px;
-      flex: 0 0 54px;
-      border-radius: 18px;
-      background: linear-gradient(135deg, var(--primary), var(--pink));
-      display: grid;
-      place-items: center;
-      color: white;
-      font-weight: 950;
-      border: 3px solid white;
-      box-shadow: var(--shadow);
-    }
-
-    .brand h1 {
-      margin: 0;
-      font-size: clamp(1.18rem, 3.3vw, 2rem);
-      line-height: 1.05;
-      letter-spacing: -.04em;
-    }
-
-    .brand p {
-      margin: 4px 0 0;
-      color: var(--muted);
-      font-size: .93rem;
-    }
-
-    .window {
-      background: rgba(255,255,255,.94);
-      border: 2px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      overflow: hidden;
-    }
-
-    .titlebar {
-      background: linear-gradient(90deg, var(--primary), #9c84ff, var(--pink));
-      color: white;
-      padding: 9px 12px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
+    .auth-left .stamp {
+      display: inline-block;
+      border: 2px solid var(--accent);
+      color: var(--accent);
       font-family: var(--mono);
-      font-size: .82rem;
-      font-weight: 800;
+      font-size: .7rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      margin-bottom: 24px;
     }
 
-    .dots { display: flex; gap: 6px; flex-shrink: 0; }
-    .dot { width: 12px; height: 12px; border-radius: 50%; background: white; border: 1px solid rgba(0,0,0,.15); }
+    .auth-left h1 {
+      font-family: var(--serif);
+      font-size: clamp(2.2rem, 5vw, 3.8rem);
+      line-height: 1;
+      letter-spacing: -.02em;
+      margin-bottom: 20px;
+    }
 
-    .layout {
+    .auth-left h1 em { color: var(--gold); font-style: italic; }
+
+    .auth-left p {
+      color: rgba(250,248,244,.7);
+      line-height: 1.7;
+      font-size: .92rem;
+    }
+
+    .auth-left .the-five {
+      margin-top: 28px;
+      border-top: 1px solid rgba(255,255,255,.15);
+      padding-top: 20px;
       display: grid;
-      grid-template-columns: 310px minmax(0, 1fr);
-      gap: 18px;
-      align-items: start;
+      gap: 10px;
     }
 
-    .sidebar {
-      position: sticky;
-      top: 14px;
-      max-height: calc(100vh - 28px);
-      overflow: auto;
+    .auth-left .five-item {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      font-size: .85rem;
     }
 
-    .side-inner { padding: 14px; }
+    .five-num {
+      font-family: var(--mono);
+      font-size: .7rem;
+      color: var(--gold);
+      flex: 0 0 22px;
+      margin-top: 2px;
+    }
 
-    .pill {
+    .auth-right { padding: clamp(24px,5vw,48px); }
+    .auth-right h2 { font-family: var(--serif); font-size: 1.8rem; margin-bottom: 20px; }
+
+    .auth-tabs { display: flex; gap: 0; margin-bottom: 24px; border: 2px solid var(--ink); }
+    .auth-tab {
+      flex: 1;
+      border: 0;
+      background: transparent;
+      font-family: var(--sans);
+      font-weight: 700;
+      font-size: .85rem;
+      padding: 10px;
+      cursor: pointer;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      color: var(--muted);
+      transition: .15s;
+    }
+    .auth-tab.active { background: var(--ink); color: var(--paper); }
+
+    label {
+      display: block;
+      font-size: .75rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px;
+      margin-top: 14px;
+    }
+
+    input {
+      width: 100%;
+      border: 2px solid var(--line);
+      background: white;
+      border-radius: 0;
+      padding: 10px 12px;
+      font-family: var(--sans);
+      font-size: .92rem;
+      color: var(--ink);
+      outline: none;
+      transition: .15s;
+    }
+    input:focus { border-color: var(--ink); }
+
+    .btn-primary {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      background: var(--yellow);
-      color: #302900;
-      border-radius: 999px;
-      padding: 7px 10px;
-      font-size: .75rem;
-      font-weight: 900;
-      border: 1px solid rgba(0,0,0,.08);
-    }
-
-    .user-card, .progress-card {
-      background: linear-gradient(135deg, #fff, #f8f3ff);
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      padding: 14px;
-      margin-bottom: 13px;
-    }
-
-    .user-card h2, .progress-card h2 { margin: 11px 0 3px; font-size: 1.15rem; }
-    .user-card p, .progress-card p { margin: 0; color: var(--muted); line-height: 1.45; font-size: .9rem; }
-
-    .progress-label {
-      display: flex;
-      justify-content: space-between;
-      margin: 12px 0 6px;
-      font-size: .82rem;
-      color: var(--muted);
-    }
-
-    .progress-bar {
-      height: 12px;
-      border-radius: 999px;
-      background: #eee7ff;
-      border: 1px solid #d8ccff;
-      overflow: hidden;
-    }
-
-    .progress-fill {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, var(--primary), var(--pink));
-      transition: width .3s ease;
-    }
-
-    .module-list { display: grid; gap: 9px; }
-
-    .module-btn {
-      width: 100%;
-      border: 1px solid var(--line);
-      background: white;
-      color: var(--text);
-      border-radius: 16px;
-      padding: 12px;
-      cursor: pointer;
-      text-align: left;
-      transition: .18s ease;
-    }
-
-    .module-btn:hover, .module-btn.active {
-      border-color: var(--primary);
-      background: #fbf8ff;
-      transform: translateY(-1px);
-    }
-
-    .module-btn small {
-      display: block;
-      color: var(--primary);
+      gap: 8px;
+      margin-top: 20px;
+      background: var(--ink);
+      color: var(--paper);
+      border: 2px solid var(--ink);
+      padding: 12px 20px;
+      font-family: var(--sans);
+      font-weight: 800;
+      font-size: .85rem;
+      letter-spacing: .06em;
       text-transform: uppercase;
-      letter-spacing: .07em;
-      font-weight: 900;
-      font-size: .66rem;
-      margin-bottom: 4px;
-    }
-
-    .module-btn strong { display: block; font-size: .93rem; line-height: 1.25; }
-    .module-btn span { display: block; color: var(--muted); font-size: .8rem; line-height: 1.3; margin-top: 3px; }
-
-    .hero {
-      padding: clamp(18px, 4vw, 28px);
-      margin-bottom: 18px;
-      background:
-        linear-gradient(135deg, rgba(255,255,255,.95), rgba(250, 244, 255,.96)),
-        repeating-linear-gradient(45deg, rgba(122,92,255,.08) 0 8px, transparent 8px 16px);
-    }
-
-    .hero-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1.3fr) minmax(240px, .7fr);
-      gap: 18px;
-      align-items: center;
-    }
-
-    .hero h2 {
-      margin: 12px 0 10px;
-      font-size: clamp(2rem, 5vw, 4.3rem);
-      line-height: .92;
-      letter-spacing: -.07em;
-    }
-
-    .hero p { color: var(--muted); line-height: 1.65; max-width: 760px; }
-
-    .btn-row { display: flex; gap: 9px; flex-wrap: wrap; margin-top: 15px; }
-
-    .btn {
-      border: 0;
-      border-radius: 999px;
-      padding: 11px 15px;
-      background: var(--primary);
-      color: white;
-      font-weight: 900;
       cursor: pointer;
-      box-shadow: 0 10px 22px rgba(122,92,255,.22);
-      transition: .18s ease;
-      min-height: 42px;
+      transition: .15s;
+      width: 100%;
+      justify-content: center;
     }
+    .btn-primary:hover { background: var(--accent); border-color: var(--accent); }
 
-    .btn:hover { transform: translateY(-1px); background: var(--primary-dark); }
-    .btn.secondary { background: white; color: var(--primary); border: 1px solid var(--line); box-shadow: none; }
-    .btn.secondary:hover { background: #f8f4ff; }
-    .btn.danger { background: var(--danger); }
-
-    .pixel-card {
-      background: white;
-      border: 2px solid #2d2142;
-      border-radius: 18px;
-      padding: 13px;
-      box-shadow: 7px 7px 0 #d8ccff;
-      font-family: var(--mono);
+    .status-msg {
+      margin-top: 12px;
+      padding: 10px 12px;
+      font-size: .85rem;
+      line-height: 1.5;
+      display: none;
     }
+    .status-msg.ok { display: block; background: #e8f5e9; border-left: 3px solid #4caf50; }
+    .status-msg.err { display: block; background: #fce4ec; border-left: 3px solid var(--accent); }
 
-    .pixel-screen {
-      height: 180px;
-      border-radius: 14px;
-      border: 2px solid #2d2142;
-      background: linear-gradient(#bdefff 0 43%, #ccffc8 43% 100%);
-      position: relative;
-      overflow: hidden;
-    }
+    /* ── APP LAYOUT ── */
+    .app { display: none; }
 
-    .cloud { position: absolute; top: 22px; left: 18px; background: white; border: 2px solid #2d2142; border-radius: 999px; padding: 8px 10px; font-size: .7rem; }
-    .desk { position: absolute; left: 28px; right: 28px; bottom: 19px; height: 20px; background: #ffce73; border: 2px solid #2d2142; border-radius: 8px; }
-    .person { position: absolute; left: 50%; bottom: 35px; transform: translateX(-50%); width: 38px; }
-    .head { width: 30px; height: 30px; margin: 0 auto; background: #ffd4b8; border: 2px solid #2d2142; border-radius: 10px; }
-    .body { width: 38px; height: 32px; background: var(--primary); border: 2px solid #2d2142; border-radius: 8px 8px 4px 4px; margin-top: -1px; }
-
-    .content-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) 340px;
-      gap: 18px;
-      align-items: start;
-    }
-
-    .pad { padding: 17px; }
-
-    .section-title {
+    .topbar {
+      background: var(--ink);
+      color: var(--paper);
+      padding: 0 24px;
+      height: 56px;
       display: flex;
-      align-items: flex-start;
+      align-items: center;
       justify-content: space-between;
-      gap: 12px;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 3px solid var(--accent);
+    }
+
+    .topbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .topbar-logo {
+      font-family: var(--mono);
+      font-size: .72rem;
+      letter-spacing: .1em;
+      color: var(--gold);
+      text-transform: uppercase;
+      border: 1px solid var(--gold);
+      padding: 3px 8px;
+    }
+
+    .topbar-title {
+      font-family: var(--serif);
+      font-size: 1.3rem;
+      font-style: italic;
+    }
+
+    .topbar-right { display: flex; align-items: center; gap: 16px; }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,.3);
+      color: var(--paper);
+      font-family: var(--sans);
+      font-size: .75rem;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      padding: 7px 14px;
+      cursor: pointer;
+      transition: .15s;
+    }
+    .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+    .btn-ghost.danger:hover { color: #ff6b6b; border-color: #ff6b6b; }
+
+    .user-chip {
+      font-family: var(--mono);
+      font-size: .72rem;
+      color: rgba(250,248,244,.5);
+    }
+
+    .main-layout {
+      display: grid;
+      grid-template-columns: 260px minmax(0, 1fr);
+      min-height: calc(100vh - 56px);
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      background: var(--cream);
+      border-right: 2px solid var(--line);
+      padding: 20px 16px;
+      position: sticky;
+      top: 56px;
+      height: calc(100vh - 56px);
+      overflow-y: auto;
+    }
+
+    .sidebar-section { margin-bottom: 28px; }
+
+    .sidebar-label {
+      font-family: var(--mono);
+      font-size: .65rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 10px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .progress-wrap { margin-bottom: 16px; }
+    .progress-nums {
+      display: flex;
+      justify-content: space-between;
+      font-size: .78rem;
+      color: var(--muted);
+      margin-bottom: 5px;
+    }
+    .progress-track {
+      height: 6px;
+      background: var(--warm);
+      border: 1px solid var(--line);
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: var(--accent);
+      transition: width .4s ease;
+    }
+
+    .result-chip {
+      background: var(--ink);
+      color: var(--gold);
+      font-family: var(--mono);
+      font-size: .75rem;
+      padding: 6px 10px;
+      display: block;
+      text-align: center;
       margin-bottom: 12px;
     }
 
-    .phase-tag { color: var(--primary); font-weight: 950; font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; }
-    .section-title h3 { margin: 3px 0 0; font-size: 1.3rem; }
-
-    .lesson-body { color: #3b3154; line-height: 1.7; }
-    .lesson-body h4 { margin: 22px 0 8px; font-size: 1.03rem; }
-    .lesson-body ul { padding-left: 19px; }
-
-    .box {
-      background: var(--soft);
-      border: 1px solid var(--line);
-      border-radius: var(--radius-sm);
-      padding: 13px;
-      margin: 11px 0;
-      line-height: 1.55;
-    }
-
-    .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
-    .tab {
-      border: 1px solid var(--line);
-      background: white;
-      border-radius: 999px;
-      padding: 9px 12px;
-      cursor: pointer;
-      color: var(--text);
-      font-size: .82rem;
-      font-weight: 850;
-    }
-    .tab.active { background: var(--primary); color: white; border-color: var(--primary); }
-
-    .exercise {
-      background: linear-gradient(135deg, #fff, #fff8fd);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      padding: 15px;
-      margin-bottom: 14px;
-    }
-
-    .exercise h4 { margin: 0 0 7px; }
-    .exercise p { margin: 0 0 12px; color: var(--muted); line-height: 1.6; }
-
-    .word-bank { display: flex; flex-wrap: wrap; gap: 7px; margin: 10px 0; }
-    .chip {
-      border: 1px dashed var(--primary);
-      color: var(--primary);
-      background: white;
-      border-radius: 999px;
-      padding: 6px 9px;
-      font-weight: 850;
-      font-size: .78rem;
-    }
-
-    textarea, input, select {
+    .mod-btn {
       width: 100%;
-      border: 1px solid #cfc2f3;
-      background: white;
-      border-radius: 16px;
-      padding: 12px;
-      outline: none;
-      color: var(--text);
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 0;
+      padding: 10px 10px;
+      text-align: left;
+      cursor: pointer;
+      font-family: var(--sans);
+      color: var(--ink);
+      transition: .12s;
+      border-left: 3px solid transparent;
+      margin-bottom: 2px;
+    }
+    .mod-btn:hover { background: var(--warm); }
+    .mod-btn.active { border-left-color: var(--accent); background: white; }
+    .mod-btn .mod-num { font-family: var(--mono); font-size: .65rem; color: var(--muted); display: block; margin-bottom: 2px; }
+    .mod-btn .mod-name { font-size: .88rem; font-weight: 700; display: block; }
+    .mod-btn .mod-sub { font-size: .75rem; color: var(--muted); display: block; margin-top: 2px; }
+    .mod-btn.done .mod-name::before { content: "✓ "; color: #4caf50; }
+
+    /* ── CONTENT ── */
+    .content { padding: 32px 36px; max-width: 840px; }
+
+    .lesson-header {
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 2px solid var(--line);
     }
 
-    label { display: block; font-size: .82rem; font-weight: 850; margin: 12px 0 6px; color: #4a3d63; }
-
-    textarea {
-      min-height: 170px;
-      resize: vertical;
-      line-height: 1.55;
-    }
-
-    textarea:focus, input:focus, select:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(122,92,255,.12); }
-
-    .result-panel {
-      display: none;
-      margin-top: 13px;
-      background: #f3fff6;
-      border: 1px solid #a7e9b7;
-      color: #214f2d;
-      border-radius: 17px;
-      padding: 14px;
-      line-height: 1.55;
-    }
-
-    .score-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
+    .lesson-tag {
+      font-family: var(--mono);
+      font-size: .68rem;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--accent);
       margin-bottom: 10px;
     }
 
-    .score-number {
-      font-size: 2rem;
-      font-weight: 950;
-      color: var(--primary);
-      letter-spacing: -.04em;
+    .lesson-title {
+      font-family: var(--serif);
+      font-size: clamp(2.2rem, 4vw, 3.4rem);
+      line-height: 1;
+      letter-spacing: -.02em;
+      margin-bottom: 12px;
     }
 
-    .metric {
+    .lesson-subtitle {
+      font-size: 1rem;
+      color: var(--muted);
+      line-height: 1.65;
+      max-width: 560px;
+    }
+
+    .unlock-banner {
+      background: var(--ink);
+      color: var(--paper);
+      padding: 16px 20px;
+      margin: 24px 0;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .unlock-icon {
+      font-size: 1.4rem;
+      flex: 0 0 auto;
+      margin-top: 2px;
+    }
+
+    .unlock-text strong {
+      display: block;
+      font-family: var(--mono);
+      font-size: .72rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 5px;
+    }
+
+    .unlock-text p { font-size: .9rem; line-height: 1.55; color: rgba(250,248,244,.85); }
+
+    .lesson-body { line-height: 1.75; color: #2a2318; }
+    .lesson-body h4 {
+      font-family: var(--serif);
+      font-size: 1.2rem;
+      margin: 24px 0 10px;
+      font-style: italic;
+    }
+    .lesson-body ul { padding-left: 20px; margin: 10px 0; }
+    .lesson-body li { margin-bottom: 7px; font-size: .92rem; }
+    .lesson-body p { margin-bottom: 14px; font-size: .92rem; }
+
+    .compare-block {
       display: grid;
-      grid-template-columns: 140px 1fr 38px;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border: 2px solid var(--ink);
+      margin: 18px 0;
+      font-size: .88rem;
+    }
+    .compare-block .col { padding: 14px 16px; }
+    .compare-block .col:first-child { border-right: 2px solid var(--ink); background: var(--cream); }
+    .compare-block .col-label {
+      font-family: var(--mono);
+      font-size: .65rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .compare-block .col:first-child .col-label { color: var(--accent); }
+    .compare-block .col:last-child .col-label { color: #4caf50; }
+    .compare-block .col p { margin: 0; line-height: 1.6; }
+
+    .chunk-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 14px 0;
+    }
+    .chunk {
+      border: 1.5px solid var(--ink);
+      padding: 5px 12px;
+      font-family: var(--mono);
+      font-size: .78rem;
+      background: white;
+      color: var(--ink);
+    }
+
+    /* ── PRACTICE ── */
+    .practice-section { margin-top: 36px; }
+
+    .practice-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .practice-title {
+      font-family: var(--serif);
+      font-size: 1.5rem;
+      font-style: italic;
+    }
+
+    .act-tabs {
+      display: flex;
+      gap: 0;
+      border: 2px solid var(--ink);
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .act-tab {
+      flex: 1;
+      min-width: 80px;
+      border: 0;
+      border-right: 2px solid var(--ink);
+      background: transparent;
+      font-family: var(--sans);
+      font-size: .75rem;
+      font-weight: 700;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      padding: 9px 12px;
+      cursor: pointer;
+      color: var(--muted);
+      transition: .12s;
+    }
+    .act-tab:last-child { border-right: 0; }
+    .act-tab.active { background: var(--ink); color: var(--paper); }
+    .act-tab:hover:not(.active) { background: var(--warm); }
+
+    .exercise-card {
+      border: 2px solid var(--ink);
+      background: white;
+    }
+
+    .exercise-top { padding: 16px 20px; border-bottom: 2px solid var(--ink); background: var(--cream); }
+    .exercise-top .ex-type {
+      font-family: var(--mono);
+      font-size: .68rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--accent2);
+      margin-bottom: 6px;
+    }
+    .exercise-top .ex-prompt { font-size: .92rem; line-height: 1.65; color: var(--ink); }
+
+    .exercise-bank { padding: 12px 20px; border-bottom: 1px solid var(--line); background: #fcfaf6; }
+    .exercise-bank .bank-label {
+      font-family: var(--mono);
+      font-size: .62rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .exercise-write { padding: 16px 20px; }
+
+    textarea {
+      width: 100%;
+      border: 2px solid var(--line);
+      background: var(--paper);
+      padding: 14px;
+      font-family: var(--sans);
+      font-size: .92rem;
+      line-height: 1.65;
+      color: var(--ink);
+      resize: vertical;
+      min-height: 160px;
+      outline: none;
+      transition: .15s;
+      border-radius: 0;
+    }
+    textarea:focus { border-color: var(--ink); background: white; }
+
+    .exercise-actions {
+      display: flex;
       gap: 8px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn-eval {
+      background: var(--accent);
+      color: white;
+      border: 2px solid var(--accent);
+      font-family: var(--sans);
+      font-weight: 800;
+      font-size: .8rem;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      padding: 10px 18px;
+      cursor: pointer;
+      transition: .15s;
+    }
+    .btn-eval:hover { background: #a33a22; border-color: #a33a22; }
+
+    .btn-sec {
+      background: transparent;
+      color: var(--ink);
+      border: 2px solid var(--line);
+      font-family: var(--sans);
+      font-weight: 700;
+      font-size: .78rem;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      padding: 10px 16px;
+      cursor: pointer;
+      transition: .15s;
+    }
+    .btn-sec:hover { border-color: var(--ink); background: var(--cream); }
+
+    .btn-complete {
+      margin-top: 32px;
+      width: 100%;
+      background: transparent;
+      color: var(--ink);
+      border: 2px solid var(--ink);
+      font-family: var(--sans);
+      font-weight: 800;
+      font-size: .82rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: 14px;
+      cursor: pointer;
+      transition: .15s;
+    }
+    .btn-complete:hover { background: var(--ink); color: var(--paper); }
+
+    /* ── RESULT PANEL ── */
+    .result-panel {
+      display: none;
+      margin-top: 16px;
+      border: 2px solid var(--ink);
+    }
+
+    .result-top {
+      background: var(--ink);
+      color: var(--paper);
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .score-big {
+      font-family: var(--mono);
+      font-size: 2.2rem;
+      font-weight: 500;
+      color: var(--gold);
+      line-height: 1;
+    }
+    .score-label {
+      font-size: .82rem;
+      color: rgba(250,248,244,.7);
+      font-style: italic;
+      margin-top: 4px;
+    }
+
+    .result-body { padding: 16px 18px; }
+
+    .metric-row {
+      display: grid;
+      grid-template-columns: 150px 1fr 40px;
+      gap: 10px;
       align-items: center;
       padding: 9px 0;
-      border-bottom: 1px solid rgba(90, 70, 130, .13);
-      font-size: .9rem;
-      position: relative;
-      cursor: help;
-    }
-
-    .metric:hover {
-      background: rgba(122, 92, 255, .05);
-      border-radius: 12px;
-      padding-left: 8px;
-      padding-right: 8px;
-    }
-
-    .metric:hover::after {
-      content: attr(data-tip);
-      position: absolute;
-      left: 10px;
-      right: 10px;
-      top: calc(100% + 6px);
-      z-index: 10;
-      background: #241b38;
-      color: white;
-      border-radius: 14px;
-      padding: 10px 12px;
+      border-bottom: 1px solid var(--line);
       font-size: .82rem;
-      line-height: 1.45;
-      box-shadow: var(--shadow);
+    }
+    .metric-row:last-child { border-bottom: 0; }
+    .metric-track { height: 7px; background: var(--warm); border: 1px solid var(--line); }
+    .metric-fill { height: 100%; background: var(--accent2); transition: width .5s ease; }
+    .metric-val { font-family: var(--mono); font-size: .72rem; text-align: right; color: var(--muted); }
+
+    .next-steps {
+      margin-top: 14px;
+      padding: 14px 16px;
+      background: var(--cream);
+      border: 1px solid var(--line);
+    }
+    .next-steps .ns-title {
+      font-family: var(--mono);
+      font-size: .68rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+    .next-steps ul { padding-left: 18px; }
+    .next-steps li { font-size: .85rem; line-height: 1.6; margin-bottom: 5px; }
+
+    /* ── TIMER & PROMPT SIDEBAR ── */
+    .tools-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 28px;
     }
 
-    .metric {
-      gap: 8px;
-      align-items: center;
-      padding: 8px 0;
-      border-bottom: 1px solid rgba(90, 70, 130, .13);
-      font-size: .9rem;
+    .tool-card {
+      border: 2px solid var(--ink);
+      background: white;
     }
-    .metric:last-child { border-bottom: 0; }
-    .mini-bar { height: 9px; border-radius: 999px; background: #e7defd; overflow: hidden; }
-    .mini-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--pink)); width: 0%; }
 
-    .tool-stack { display: grid; gap: 18px; }
-    .timer { font-size: 2.25rem; font-weight: 950; letter-spacing: -.04em; text-align: center; font-family: var(--mono); background: var(--soft); border: 1px solid var(--line); border-radius: 18px; padding: 12px; }
+    .tool-head {
+      background: var(--ink);
+      color: var(--paper);
+      padding: 8px 14px;
+      font-family: var(--mono);
+      font-size: .68rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
 
-    .portfolio-list { display: grid; gap: 10px; margin-top: 12px; }
-    .portfolio-item { border: 1px solid var(--line); border-radius: 16px; background: white; padding: 12px; }
-    .portfolio-item small { color: var(--muted); }
-    .portfolio-item p { color: #3d3354; line-height: 1.5; margin: 8px 0 0; }
+    .tool-body { padding: 14px; }
 
-    .modal-backdrop {
+    .timer-display {
+      font-family: var(--mono);
+      font-size: 2.4rem;
+      text-align: center;
+      color: var(--ink);
+      letter-spacing: .06em;
+      padding: 10px 0;
+    }
+
+    select {
+      width: 100%;
+      border: 2px solid var(--line);
+      background: white;
+      font-family: var(--sans);
+      font-size: .85rem;
+      padding: 8px 10px;
+      color: var(--ink);
+      outline: none;
+      margin-bottom: 10px;
+      cursor: pointer;
+      border-radius: 0;
+    }
+    select:focus { border-color: var(--ink); }
+
+    .btn-timer {
+      display: inline-block;
+      background: var(--ink);
+      color: var(--paper);
+      border: 2px solid var(--ink);
+      font-family: var(--sans);
+      font-weight: 800;
+      font-size: .75rem;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      padding: 8px 14px;
+      cursor: pointer;
+      transition: .15s;
+    }
+    .btn-timer:hover { background: transparent; color: var(--ink); }
+
+    .prompt-text {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 1rem;
+      line-height: 1.65;
+      color: var(--ink);
+      margin-bottom: 12px;
+      min-height: 72px;
+    }
+
+    /* ── PORTFOLIO ── */
+    .portfolio-wrap { margin-top: 32px; }
+    .port-title { font-family: var(--serif); font-size: 1.4rem; font-style: italic; margin-bottom: 16px; }
+    .port-item {
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--accent2);
+      background: white;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+    }
+    .port-item strong { font-size: .92rem; }
+    .port-item .port-meta { font-family: var(--mono); font-size: .65rem; color: var(--muted); display: block; margin: 4px 0 8px; }
+    .port-item p { font-size: .85rem; line-height: 1.65; color: #3a3228; margin: 0 0 8px; }
+    .btn-del {
+      background: transparent;
+      border: 1px solid #ffb3b3;
+      color: var(--accent);
+      font-family: var(--sans);
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+    .btn-del:hover { background: #fff0f0; }
+
+    .draft-notice {
+      font-family: var(--mono);
+      font-size: .72rem;
+      color: var(--muted);
+      background: var(--cream);
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--gold);
+      padding: 8px 12px;
+      margin-top: 10px;
       display: none;
-      position: fixed;
-      z-index: 30;
-      inset: 0;
-      background: rgba(30, 20, 49, .5);
-      padding: 18px;
-      align-items: center;
-      justify-content: center;
     }
 
-    .modal { width: min(760px, 100%); max-height: 90vh; overflow: auto; background: white; border-radius: var(--radius); border: 2px solid var(--line); box-shadow: var(--shadow); }
-
-    .status-message {
-      display: none;
-      margin-top: 12px;
-      padding: 11px 12px;
-      border-radius: 14px;
-      line-height: 1.45;
-      font-size: .9rem;
-    }
-    .status-message.ok { display: block; background: #f0fff5; border: 1px solid #a4e8b5; color: #24592f; }
-    .status-message.err { display: block; background: #fff0f4; border: 1px solid #ffb3c5; color: #8b2440; }
-
-    @media (max-width: 980px) {
-      .layout, .content-grid, .hero-grid, .auth-card { grid-template-columns: 1fr; }
-      .sidebar { position: static; max-height: none; }
-      .module-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    @media (max-width: 900px) {
+      .auth-card { grid-template-columns: 1fr; }
+      .auth-left { display: none; }
+      .main-layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; height: auto; }
+      .content { padding: 20px 18px; }
+      .compare-block { grid-template-columns: 1fr; }
+      .compare-block .col:first-child { border-right: 0; border-bottom: 2px solid var(--ink); }
+      .tools-row { grid-template-columns: 1fr; }
     }
 
-    @media (max-width: 640px) {
-      .app { padding: 10px; }
-      .topbar { align-items: stretch; flex-direction: column; }
-      .brand { align-items: flex-start; }
-      .module-list { grid-template-columns: 1fr; }
-      .section-title { flex-direction: column; }
-      .btn { width: 100%; }
-      .btn-row { display: grid; grid-template-columns: 1fr; }
-      .metric { grid-template-columns: 88px 1fr 34px; font-size: .82rem; }
-      .pixel-screen { height: 150px; }
+    @media (max-width: 520px) {
+      .act-tabs { flex-direction: column; }
+      .act-tab { border-right: 0; border-bottom: 2px solid var(--ink); }
+      .act-tab:last-child { border-bottom: 0; }
+      .metric-row { grid-template-columns: 110px 1fr 36px; }
     }
   </style>
 </head>
 <body>
-  <section class="auth-screen" id="authScreen">
-    <div class="auth-card">
-      <div class="auth-hero">
-        <span class="pill">Help.debs Writing Course</span>
-        <h1>English Writing Mastery</h1>
-        <p>Entre com sua conta para salvar progresso, textos, avaliações e resultado fixo por pessoa.</p>
-        <div class="box" style="background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.35);color:white;">
-          O progresso é salvo no Supabase e fica vinculado ao e-mail da aluna.
-        </div>
-      </div>
-      <div class="auth-form">
-        <div class="auth-tabs">
-          <button class="btn" id="loginTab" onclick="setAuthMode('login')">Entrar</button>
-          <button class="btn secondary" id="signupTab" onclick="setAuthMode('signup')">Criar conta</button>
-        </div>
-        <h2 id="authTitle">Entrar no curso</h2>
-        <label for="authName" id="nameLabel" style="display:none;">Nome completo</label>
-        <input id="authName" type="text" placeholder="Seu nome" style="display:none;" />
-        <label for="authEmail">E-mail</label>
-        <input id="authEmail" type="email" placeholder="seuemail@email.com" />
-        <label for="authPassword">Senha</label>
-        <input id="authPassword" type="password" placeholder="mínimo 6 caracteres" />
-        <div class="btn-row">
-          <button class="btn" onclick="handleAuth()" id="authButton">Entrar</button>
-        </div>
-        <div id="authMessage" class="status-message"></div>
+
+<!-- AUTH -->
+<section class="auth-wrap" id="authScreen">
+  <div class="auth-card">
+    <div class="auth-left">
+      <div class="stamp">Help.debs</div>
+      <h1>Writing <em>Unlocked</em></h1>
+      <p>Cinco desbloqueios reais para você parar de traduzir mentalmente e começar a escrever em inglês de verdade.</p>
+      <div class="the-five">
+        <div class="five-item"><span class="five-num">01</span><span>Chunks naturais — frases que soam como inglês de verdade</span></div>
+        <div class="five-item"><span class="five-num">02</span><span>Fluxo — escrever sem travar nem apagar tudo</span></div>
+        <div class="five-item"><span class="five-num">03</span><span>Coesão — conectar ideias e criar parágrafos reais</span></div>
+        <div class="five-item"><span class="five-num">04</span><span>Profundidade — sair da superfície e desenvolver ideias</span></div>
+        <div class="five-item"><span class="five-num">05</span><span>Voz — adaptar tom, ritmo e estilo ao contexto</span></div>
       </div>
     </div>
-  </section>
-
-  <div class="app" id="app">
-    <header class="topbar">
-      <div class="brand">
-        <div class="logo">HD</div>
-        <div>
-          <h1>English Writing Mastery</h1>
-          <p>Curso completo de escrita em inglês com progresso salvo.</p>
-        </div>
+    <div class="auth-right">
+      <h2>Entrar no curso</h2>
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="loginTab" onclick="setAuthMode('login')">Entrar</button>
+        <button class="auth-tab" id="signupTab" onclick="setAuthMode('signup')">Criar conta</button>
       </div>
-      <div class="btn-row" style="margin-top:0;">
-        <button class="btn secondary" onclick="openModal('aboutModal')">Como funciona</button>
-        <button class="btn danger" onclick="logout()">Sair</button>
+      <div id="nameField" style="display:none;">
+        <label>Nome completo</label>
+        <input id="authName" type="text" placeholder="Seu nome" />
       </div>
-    </header>
-
-    <div class="layout">
-      <aside class="window sidebar">
-        <div class="titlebar"><span>help.debs/course.exe</span><div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div></div>
-        <div class="side-inner">
-          <div class="user-card">
-            <span class="pill">✦ Student</span>
-            <h2 id="studentName">Aluna</h2>
-            <p id="studentEmail">email</p>
-            <p style="margin-top:8px;"><strong>Resultado fixo:</strong> <span id="fixedResult">Ainda sem resultado</span></p>
-          </div>
-          <div class="progress-card">
-            <span class="pill">✦ Writing Journey</span>
-            <h2>Progresso</h2>
-            <p>O curso salva módulos concluídos, textos e avaliações.</p>
-            <div class="progress-label"><span>Módulos concluídos</span><strong id="progressText">0%</strong></div>
-            <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-          </div>
-          <nav class="module-list" id="moduleList"></nav>
-        </div>
-      </aside>
-
-      <main>
-        <section class="window hero">
-          <div class="hero-grid">
-            <div>
-              <span class="pill">100% writing-based</span>
-              <h2>Write clearly. Think deeply. Sound natural.</h2>
-              <p>Um treinamento de escrita com lições, drills, desafios, timer, portfólio, avaliação automática e resultado salvo por aluna.</p>
-              <div class="btn-row">
-                <button class="btn" onclick="startCourse()">Começar</button>
-                <button class="btn secondary" onclick="openModal('diagnosticModal')">Diagnóstico</button>
-                <button class="btn secondary" onclick="openModal('portfolioModal')">Portfólio</button>
-              </div>
-            </div>
-            <div class="pixel-card">
-              <div class="pixel-screen">
-                <div class="cloud">progress saved!</div>
-                <div class="desk"></div>
-                <div class="person"><div class="head"></div><div class="body"></div></div>
-              </div>
-              <p style="margin:12px 0 0;">login → write → evaluation → fixed result</p>
-            </div>
-          </div>
-        </section>
-
-        <div class="content-grid">
-          <section class="window">
-            <div class="titlebar"><span id="lessonWindowTitle">lesson.html</span><div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div></div>
-            <div class="pad">
-              <div class="section-title">
-                <div>
-                  <div class="phase-tag" id="phaseTag">Phase 1</div>
-                  <h3 id="lessonTitle">Sentence Foundations</h3>
-                </div>
-                <button class="btn secondary" onclick="markCurrentComplete()">Concluir módulo</button>
-              </div>
-              <div class="lesson-body" id="lessonBody"></div>
-            </div>
-          </section>
-
-          <aside class="tool-stack">
-            <section class="window">
-              <div class="titlebar"><span>writing_timer.app</span><div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div></div>
-              <div class="pad">
-                <div class="timer" id="timerDisplay">05:00</div>
-                <select id="timerSelect" style="margin-top:10px;">
-                  <option value="300">5 minutos</option>
-                  <option value="600">10 minutos</option>
-                  <option value="1200">20 minutos</option>
-                  <option value="1800">30 minutos</option>
-                </select>
-                <div class="btn-row">
-                  <button class="btn" onclick="startTimer()">Iniciar</button>
-                  <button class="btn secondary" onclick="resetTimer()">Resetar</button>
-                </div>
-              </div>
-            </section>
-
-            <section class="window">
-              <div class="titlebar"><span>daily_prompt.txt</span><div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div></div>
-              <div class="pad">
-                <h3 style="margin-top:0;">Prompt do dia</h3>
-                <p id="dailyPrompt" style="color:var(--muted);line-height:1.6;"></p>
-                <button class="btn secondary" onclick="newPrompt()">Novo prompt</button>
-              </div>
-            </section>
-          </aside>
-        </div>
-
-        <section class="window" style="margin-top:18px;">
-          <div class="titlebar"><span>practice_lab.exe</span><div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div></div>
-          <div class="pad">
-            <div class="section-title">
-              <h3>Practice Lab</h3>
-              <span class="pill">Write → Get evaluated → Save result</span>
-            </div>
-            <div class="tabs" id="activityTabs"></div>
-            <div id="activityArea"></div>
-          </div>
-        </section>
-      </main>
+      <label>E-mail</label>
+      <input id="authEmail" type="email" placeholder="seuemail@email.com" />
+      <label>Senha</label>
+      <input id="authPassword" type="password" placeholder="mínimo 6 caracteres" />
+      <button class="btn-primary" onclick="handleAuth()" id="authButton">Entrar</button>
+      <div id="authMessage" class="status-msg"></div>
     </div>
   </div>
+</section>
 
-  <div class="modal-backdrop" id="aboutModal">
-    <div class="modal">
-      <div class="titlebar"><span>about_course.txt</span><button class="btn secondary" onclick="closeModal('aboutModal')">Fechar</button></div>
-      <div class="pad">
-        <h2>Como funciona</h2>
-        <p>O aluno entra com login, escreve no Practice Lab e clica em <strong>Avaliar escrita</strong>. O curso analisa o texto e salva a avaliação na tabela do Supabase.</p>
-        <div class="box"><strong>Resultado fixo:</strong> o sistema mantém o melhor resultado geral da pessoa em <code>writing_results</code>, vinculado ao ID do usuário.</div>
-      </div>
+<!-- APP -->
+<div class="app" id="app">
+  <header class="topbar">
+    <div class="topbar-brand">
+      <div class="topbar-logo">Help.debs</div>
+      <div class="topbar-title">Writing Unlocked</div>
     </div>
-  </div>
+    <div class="topbar-right">
+      <div class="user-chip" id="userChip">—</div>
+      <button class="btn-ghost danger" onclick="logout()">Sair</button>
+    </div>
+  </header>
 
-  <div class="modal-backdrop" id="diagnosticModal">
-    <div class="modal">
-      <div class="titlebar"><span>diagnostic_test.form</span><button class="btn secondary" onclick="closeModal('diagnosticModal')">Fechar</button></div>
-      <div class="pad">
-        <h2>Diagnóstico inicial</h2>
-        <p>Escreva de 120 a 180 palavras. Depois clique em avaliar.</p>
-        <div class="box"><strong>Prompt:</strong> Describe a moment when you realized you needed to change something in your life. What happened, what did you feel, and what did you learn?</div>
-        <textarea id="diagnosticText" placeholder="Write your diagnostic text here..."></textarea>
-        <div class="btn-row">
-          <button class="btn" onclick="evaluateDiagnostic()">Avaliar e salvar diagnóstico</button>
-          <button class="btn secondary" onclick="saveSpecificText('Texto diagnóstico', document.getElementById('diagnosticText').value, null, true)">Salvar sem avaliar</button>
+  <div class="main-layout">
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-label">Resultado salvo</div>
+        <div class="result-chip" id="resultChip">Sem avaliação ainda</div>
+        <div class="progress-wrap">
+          <div class="progress-nums">
+            <span>Módulos concluídos</span>
+            <strong id="progressPct">0%</strong>
+          </div>
+          <div class="progress-track">
+            <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+          </div>
         </div>
-        <div class="result-panel" id="diagnosticResult"></div>
       </div>
-    </div>
-  </div>
-
-  <div class="modal-backdrop" id="portfolioModal">
-    <div class="modal">
-      <div class="titlebar"><span>portfolio.folder</span><button class="btn secondary" onclick="closeModal('portfolioModal')">Fechar</button></div>
-      <div class="pad">
-        <h2>Portfólio</h2>
-        <p>Textos salvos no Supabase para comparação de evolução.</p>
-        <div id="portfolioList" class="portfolio-list"></div>
+      <div class="sidebar-section">
+        <div class="sidebar-label">Módulos</div>
+        <nav id="moduleNav"></nav>
       </div>
-    </div>
+    </aside>
+
+    <main class="content" id="mainContent">
+      <!-- rendered by JS -->
+    </main>
   </div>
+</div>
 
-  <script>
-   const SUPABASE_URL = "https://pgdanuifukzisyyummpz.supabase.co";
+<script>
+  const SUPABASE_URL = "COLE_AQUI_SUA_SUPABASE_URL";
+  const SUPABASE_ANON_KEY = "COLE_AQUI_SUA_SUPABASE_ANON_KEY";
+  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-const SUPABASE_ANON_KEY = "sb_publishable_81NM6F08rsXXSCgjWl4iSg_v99cdVpo";
-    const supabaseClient = supabase.createClient("https://pgdanuifukzisyyummpz.supabase.co", "sb_publishable_81NM6F08rsXXSCgjWl4iSg_v99cdVpo");
-
-    const course = [
-      { phase: "Phase 1", title: "Sentence Foundations", subtitle: "Frases naturais e chunks básicos", objective: "Escrever frases claras sem traduzir literalmente do português.", lesson: `<h4>Objetivo</h4><p>A aluna aprende a montar frases naturais, com ordem correta, informação suficiente e blocos úteis.</p><h4>Padrões essenciais</h4><ul><li>I find it difficult to...</li><li>I tend to...</li><li>One thing I noticed is...</li><li>I ended up...</li><li>It made me feel...</li></ul><div class="box"><strong>Weak:</strong> I have 24 years and like very much music.<br><strong>Strong:</strong> I’m 24 years old and I really like music.</div>`, activities: [{type:"Reconstruction", prompt:"Rewrite naturally: 'I have difficult to speak because I think much in Portuguese.'", bank:["I find it difficult to", "because", "I tend to"]},{type:"Expansion", prompt:"Expand this sentence: 'I studied English yesterday.'", bank:["after work", "for a while", "because", "even though"]},{type:"Mini Writing", prompt:"Write 6 sentences about your routine using at least 3 chunks from the lesson.", bank:["I usually", "I tend to", "One thing I noticed", "At some point"]}] },
-      { phase: "Phase 1", title: "Thinking in English", subtitle: "Fluxo mental e escrita rápida", objective: "Reduzir tradução mental e aumentar velocidade de escrita.", lesson: `<h4>Objetivo</h4><p>A aluna treina escrita contínua, sem apagar tudo enquanto escreve.</p><h4>Técnicas</h4><ul><li>Fast writing: escrever por tempo.</li><li>Association writing: puxar ideias por associação.</li><li>Reaction writing: reagir a uma frase, cena ou imagem.</li></ul><div class="box">A primeira versão precisa existir. A qualidade vem na revisão.</div>`, activities: [{type:"Fast Writing", prompt:"Write for 5 minutes about mornings. Do not stop. Do not delete.", bank:["When I wake up", "The first thing", "I usually feel"]},{type:"Association", prompt:"Start with 'rain' and write memories, feelings, images and opinions connected to it.", bank:["It reminds me of", "I associate it with", "For some reason"]},{type:"Reaction", prompt:"React to: 'Being busy can sometimes become a way to avoid yourself.'", bank:["I agree because", "This makes me think of", "In my experience"]}] },
-      { phase: "Phase 2", title: "Cohesion & Flow", subtitle: "Conectores e progressão", objective: "Transformar frases soltas em parágrafos com fluxo.", lesson: `<h4>Objetivo</h4><p>A aluna aprende a conectar ideias com contraste, causa, consequência e mudança de direção.</p><div class="word-bank"><span class="chip">although</span><span class="chip">however</span><span class="chip">therefore</span><span class="chip">meanwhile</span><span class="chip">instead</span><span class="chip">otherwise</span><span class="chip">despite</span></div><div class="box"><strong>Weak:</strong> I was tired. I went out. I had fun.<br><strong>Strong:</strong> Even though I was tired, I decided to go out and ended up having fun.</div>`, activities: [{type:"Connector Repair", prompt:"Improve: 'I wanted to stay home. My friends invited me. I went. It was good.'", bank:["even though", "at first", "however", "in the end"]},{type:"Fusion", prompt:"Turn into one paragraph: 'I like working from home. It can be lonely. It saves time. I miss human interaction.'", bank:["On the one hand", "On the other hand", "while", "still"]},{type:"Transition Challenge", prompt:"Write a paragraph where every sentence clearly connects to the previous one.", bank:["This is why", "At the same time", "As a result"]}] },
-      { phase: "Phase 2", title: "Writing With Depth", subtitle: "Interpretação e nuance", objective: "Sair da escrita superficial e desenvolver ideias.", lesson: `<h4>Objetivo</h4><p>A aluna transforma opinião simples em pensamento mais elaborado.</p><div class="box"><strong>Simple:</strong> Some people are confident.<br><strong>Deeper:</strong> People who appear confident are often perceived as more competent, even when their ideas lack depth.</div><h4>Estrutura</h4><ul><li>Observation</li><li>Interpretation</li><li>Example</li><li>Implication</li></ul>`, activities: [{type:"Interpretation", prompt:"Develop: 'Some people speak very well but lack depth.'", bank:["appear", "are perceived as", "regardless of", "substance"]},{type:"Perspective", prompt:"Write about social media from a journalist's perspective and then from a tired teenager's perspective.", bank:["According to", "It seems that", "Honestly"]},{type:"Subtext", prompt:"Write a short dialogue where one person is upset but never says 'I'm upset'.", bank:["It's fine", "I just thought", "Never mind"]}] },
-      { phase: "Phase 3", title: "Paragraph Architecture", subtitle: "Parágrafos fortes", objective: "Construir parágrafos organizados e completos.", lesson: `<h4>Arquitetura</h4><ul><li>Topic sentence</li><li>Development</li><li>Example</li><li>Closing thought</li></ul><div class="box"><strong>Strong topic sentence:</strong> Modern life seems to normalize exhaustion to the point where constant stress is often mistaken for productivity.</div>`, activities: [{type:"Paragraph Completion", prompt:"Continue: 'Learning a language requires more emotional tolerance than people usually expect.'", bank:["This is because", "For example", "Over time"]},{type:"Weak to Strong", prompt:"Improve: 'Social media is bad because people spend too much time there.'", bank:["illusion", "constant comparison", "quietly encourages"]},{type:"Closing Thought", prompt:"Write 3 different closing sentences for a paragraph about discipline.", bank:["Ultimately", "In the long run", "What matters most"]}] },
-      { phase: "Phase 3", title: "Style Development", subtitle: "Tom e voz", objective: "Adaptar escrita ao contexto.", lesson: `<h4>Estilos</h4><p>A mesma ideia pode soar casual, profissional, emocional, jornalística ou analítica.</p><div class="word-bank"><span class="chip">conversational</span><span class="chip">professional</span><span class="chip">journalistic</span><span class="chip">reflective</span><span class="chip">persuasive</span></div>`, activities: [{type:"Rewrite", prompt:"Rewrite in 4 tones: 'I don't agree with this decision.'", bank:["polite", "professional", "direct", "reflective"]},{type:"Tone Shift", prompt:"Transform a rude message into a polite but firm message.", bank:["I understand", "However", "I would prefer"]},{type:"Voice", prompt:"Write a short paragraph about ambition with a reflective tone.", bank:["Sometimes", "I used to think", "What changed"]}] },
-      { phase: "Phase 4", title: "Essays & Structured Writing", subtitle: "Textos completos", objective: "Produzir textos com introdução, desenvolvimento e conclusão.", lesson: `<h4>Estrutura</h4><ul><li>Introduction</li><li>Positioning</li><li>Argument 1</li><li>Argument 2</li><li>Counterargument</li><li>Conclusion</li></ul>`, activities: [{type:"Guided Essay", prompt:"Write an opinion essay: 'Is working from home better than working in an office?'", bank:["In recent years", "One major advantage", "However", "Ultimately"]},{type:"Counterargument", prompt:"Write a counterargument for: 'Technology makes people less social.'", bank:["While this may be true", "It is also important", "In many cases"]},{type:"Conclusion", prompt:"Write a strong conclusion for an essay about modern loneliness.", bank:["The real challenge", "In the end", "What we need"]}] },
-      { phase: "Phase 4", title: "Advanced Cohesion", subtitle: "Sofisticação", objective: "Elevar a escrita para um nível mais compacto e sofisticado.", lesson: `<h4>Ferramentas</h4><ul><li>Nominalization</li><li>Emphasis structures</li><li>Compression</li></ul><div class="box"><strong>Simple:</strong> People are very stressed nowadays.<br><strong>Advanced:</strong> Modern life seems to normalize exhaustion to the point where constant stress is often mistaken for productivity.</div>`, activities: [{type:"Upgrade", prompt:"Make this more sophisticated: 'People use phones too much.'", bank:["constant stimulation", "attention", "dependency"]},{type:"Compression", prompt:"Rewrite a long paragraph into 3 strong sentences.", bank:["the tendency to", "increasingly", "rather than"]},{type:"Expansion", prompt:"Turn into a full paragraph: 'Productivity can become a performance.'", bank:["appear", "pressure", "value", "exhaustion"]}] },
-      { phase: "Phase 5", title: "Advanced Expression", subtitle: "Subtexto e abstração", objective: "Escrever com camadas de sentido.", lesson: `<h4>Temas</h4><div class="word-bank"><span class="chip">identity</span><span class="chip">loneliness</span><span class="chip">ambition</span><span class="chip">appearance vs reality</span><span class="chip">technology</span></div><p>A aluna escreve sobre temas abstratos com nuance e controle de tom.</p>`, activities: [{type:"Abstract Writing", prompt:"Write about emotional distance without using 'sad', 'lonely' or 'hurt'.", bank:["quiet", "distance", "silence"]},{type:"Layered Writing", prompt:"Write a paragraph with an explicit idea and a hidden emotional subtext.", bank:["on the surface", "underneath", "what remains"]},{type:"Editorial", prompt:"Write about why people confuse visibility with importance.", bank:["visibility", "importance", "attention"]}] },
-      { phase: "Phase 5", title: "Final Portfolio & Exam", subtitle: "Prova final", objective: "Consolidar evolução em textos finais.", lesson: `<h4>Entrega final</h4><p>A aluna monta um portfólio com textos antigos, versões revisadas e textos finais.</p><h4>Prova final</h4><ul><li>Article</li><li>Opinion piece</li><li>Analytical reflection</li><li>Emotional writing</li><li>Professional writing</li></ul>`, activities: [{type:"Final Article", prompt:"Write a 500-word article about how technology has changed emotional communication.", bank:["In many ways", "At the same time", "What this reveals"]},{type:"Before & After", prompt:"Choose one old text and rewrite it with stronger cohesion, vocabulary and rhythm.", bank:["Although", "This suggests", "For instance"]},{type:"Reflection", prompt:"Write about your evolution as a writer in English.", bank:["At the beginning", "I used to", "Now I can"]}] }
-    ];
-
-    const prompts = [
-      "Write about a place that makes you feel calm, but focus on details instead of emotions.",
-      "Describe a small decision that changed the direction of your day.",
-      "Write about something people often misunderstand about you.",
-      "Explain why confidence can sometimes be misleading.",
-      "Write a paragraph that starts with: 'For a long time, I thought...'",
-      "Describe a conversation where the real message was hidden between the lines.",
-      "Write about the difference between being productive and feeling useful.",
-      "Write a short opinion piece about modern loneliness."
-    ];
-
-    let authMode = "login";
-    let currentUser = null;
-    let currentProfile = null;
-    let currentResult = null;
-    let currentModule = 0;
-    let currentActivity = 0;
-    let timer = null;
-    let timerLeft = 300;
-    let completed = [];
-    let portfolio = [];
-
-    const $ = (id) => document.getElementById(id);
-
-    function setStatus(id, message, type) {
-      const el = $(id);
-      el.textContent = message;
-      el.className = `status-message ${type}`;
+  // ─── COURSE DATA ───────────────────────────────────────────────────────────
+  const MODULES = [
+    {
+      num: "01",
+      tag: "Desbloqueio 1",
+      title: "Chunks Naturais",
+      subtitle: "Parar de traduzir palavra por palavra",
+      unlock: {
+        icon: "🔓",
+        what: "Por que trava?",
+        why: "Você tenta traduzir cada palavra. Inglês funciona em blocos — chunks. Quem domina chunks soa natural. Quem não domina, soa robótico mesmo com gramática certa."
+      },
+      lesson: `
+        <h4>O que é um chunk?</h4>
+        <p>É uma combinação de palavras que funciona junto, como uma unidade. Você não inventa — você absorve e reproduz.</p>
+        <div class="chunk-list">
+          <span class="chunk">I tend to...</span>
+          <span class="chunk">I find it hard to...</span>
+          <span class="chunk">I ended up...</span>
+          <span class="chunk">It made me feel...</span>
+          <span class="chunk">One thing I noticed...</span>
+          <span class="chunk">I can't help but...</span>
+          <span class="chunk">I used to...</span>
+          <span class="chunk">It turns out...</span>
+        </div>
+        <div class="compare-block">
+          <div class="col"><div class="col-label">❌ Tradução literal</div><p>"I have 24 years and like very much music and study hard."</p></div>
+          <div class="col"><div class="col-label">✓ Com chunks</div><p>"I'm 24 and I really love music — I tend to study with it on in the background."</p></div>
+        </div>
+        <h4>A regra simples</h4>
+        <p>Se você está inventando a combinação palavra por palavra, pare. Prefira um chunk que você já ouviu ou leu antes. Frases menores e naturais > frases longas e tortas.</p>
+      `,
+      activities: [
+        {
+          type: "Rewrite",
+          prompt: "Reescreva naturalmente: 'I have difficult to speak because I think much in Portuguese and my words not come out.'",
+          bank: ["I find it hard to", "I tend to", "it's still", "even when"]
+        },
+        {
+          type: "Expand",
+          prompt: "Expanda com pelo menos 2 chunks: 'I studied English yesterday.'",
+          bank: ["I ended up", "even though", "I used to", "It turns out"]
+        },
+        {
+          type: "Mini Writing",
+          prompt: "Escreva 6 frases sobre o seu dia usando pelo menos 4 chunks da lição. Nada de tradução literal.",
+          bank: ["I tend to", "I ended up", "One thing I noticed", "It made me feel", "I can't help but"]
+        }
+      ]
+    },
+    {
+      num: "02",
+      tag: "Desbloqueio 2",
+      title: "Fluxo de Escrita",
+      subtitle: "Parar de travar e apagar tudo",
+      unlock: {
+        icon: "🔓",
+        what: "Por que trava?",
+        why: "Você escreve meia frase, julga, apaga e recomeça. O cérebro entra em loop de edição antes de haver algo para editar. A saída é separar criar de revisar."
+      },
+      lesson: `
+        <h4>A primeira versão é rascunho, não entrega</h4>
+        <p>Escrever em fluxo significa colocar para fora sem julgar. Depois você edita. Mas você precisa ter algo na página primeiro.</p>
+        <h4>Três técnicas que funcionam</h4>
+        <ul>
+          <li><strong>Fast writing:</strong> timer ligado, não para, não apaga. Escreve até o timer zerar.</li>
+          <li><strong>Association writing:</strong> começa de uma palavra ou imagem e vai puxando o fio das ideias.</li>
+          <li><strong>Reaction writing:</strong> lê uma frase ou ideia e responde imediatamente, sem planejar.</li>
+        </ul>
+        <div class="compare-block">
+          <div class="col"><div class="col-label">❌ Loop de trava</div><p>"She is... no. She was... hmm. Actually, she... (apaga tudo)"</p></div>
+          <div class="col"><div class="col-label">✓ Fast writing</div><p>"She was nervous, I could tell — the way she kept checking her phone, looking away when I tried to catch her eye."</p></div>
+        </div>
+        <h4>O segredo</h4>
+        <p>A qualidade não vem na primeira versão. Vem quando você revisa algo que já existe. Você não pode editar o vazio.</p>
+      `,
+      activities: [
+        {
+          type: "Fast Writing",
+          prompt: "5 minutos, sem parar, sem apagar. Escreva sobre um lugar que te acalma. Descreva detalhes, não sentimentos.",
+          bank: ["The first thing", "What I notice", "There's always", "For some reason"]
+        },
+        {
+          type: "Association",
+          prompt: "Comece com a palavra 'rain'. Escreva memórias, sensações, imagens, opiniões. Deixe uma ideia puxar a próxima.",
+          bank: ["It reminds me of", "I associate it with", "There's something about"]
+        },
+        {
+          type: "Reaction",
+          prompt: "Reaja a essa frase em pelo menos 80 palavras: 'Being constantly busy can be a way of avoiding yourself.'",
+          bank: ["I think this is true because", "In my experience", "What this makes me think of"]
+        }
+      ]
+    },
+    {
+      num: "03",
+      tag: "Desbloqueio 3",
+      title: "Coesão & Conexão",
+      subtitle: "Sair das frases soltas, criar parágrafos reais",
+      unlock: {
+        icon: "🔓",
+        what: "Por que trava?",
+        why: "Você escreve frases corretas mas desconectadas. O texto parece uma lista, não um pensamento. Conectores são o esqueleto invisível que transforma frases em ideias."
+      },
+      lesson: `
+        <h4>Conectar ≠ listar</h4>
+        <p>Um conector não é decoração. Ele muda o sentido, cria relação entre as ideias e diz ao leitor como pensar sobre o que vem a seguir.</p>
+        <div class="chunk-list">
+          <span class="chunk">although / even though</span>
+          <span class="chunk">however</span>
+          <span class="chunk">because</span>
+          <span class="chunk">which means</span>
+          <span class="chunk">despite</span>
+          <span class="chunk">as a result</span>
+          <span class="chunk">instead</span>
+          <span class="chunk">in the end</span>
+        </div>
+        <div class="compare-block">
+          <div class="col"><div class="col-label">❌ Frases soltas</div><p>"I was tired. My friends called. I went. It was good."</p></div>
+          <div class="col"><div class="col-label">✓ Com coesão</div><p>"Even though I was exhausted, I decided to go when my friends called — and in the end, it was exactly what I needed."</p></div>
+        </div>
+        <h4>A estrutura de um parágrafo real</h4>
+        <p>Ideia principal → explicação (porque / o que significa) → exemplo ou evidência → conclusão ou virada.</p>
+      `,
+      activities: [
+        {
+          type: "Fusion",
+          prompt: "Transforme em um parágrafo fluido: 'I like working from home. It can be lonely. It saves time. I miss people sometimes. I wouldn't change it.'",
+          bank: ["even though", "on the one hand", "at the same time", "which means", "in the end"]
+        },
+        {
+          type: "Connector Repair",
+          prompt: "Reescreva com conexões reais: 'I wanted to learn guitar. It was hard. I practiced. I improved. I still make mistakes.'",
+          bank: ["although", "as a result", "despite", "however", "because"]
+        },
+        {
+          type: "Full Paragraph",
+          prompt: "Escreva um parágrafo completo sobre disciplina. Use: ideia + explicação + exemplo + virada ou conclusão.",
+          bank: ["This is because", "For example", "However", "In the long run", "What matters is"]
+        }
+      ]
+    },
+    {
+      num: "04",
+      tag: "Desbloqueio 4",
+      title: "Profundidade de Pensamento",
+      subtitle: "Sair da superfície, desenvolver ideias de verdade",
+      unlock: {
+        icon: "🔓",
+        what: "Por que trava?",
+        why: "Você para na primeira camada. 'Social media is bad.' OK, mas por quê? O que isso revela? Quem é afetado e como? Profundidade não é complexidade — é fazer as perguntas certas."
+      },
+      lesson: `
+        <h4>A cadeia de profundidade</h4>
+        <p>Observação → Interpretação → Consequência → Implicação. Você não precisa usar todas, mas ir além da observação já muda tudo.</p>
+        <div class="compare-block">
+          <div class="col"><div class="col-label">❌ Superficial</div><p>"Some people are confident. It helps them in life."</p></div>
+          <div class="col"><div class="col-label">✓ Com profundidade</div><p>"People who appear confident are often perceived as more competent, regardless of whether their ideas actually hold up — which says more about how we process impressions than about merit."</p></div>
+        </div>
+        <h4>Perguntas que abrem profundidade</h4>
+        <ul>
+          <li>Por que isso acontece? O que causa isso?</li>
+          <li>O que isso revela sobre pessoas, sistemas, cultura?</li>
+          <li>Quem é afetado, como e por quê?</li>
+          <li>Qual é a contradição aqui?</li>
+          <li>O que parece óbvio mas não é?</li>
+        </ul>
+      `,
+      activities: [
+        {
+          type: "Drill Down",
+          prompt: "Desenvolva esta ideia em pelo menos 80 palavras, respondendo: por quê? o que revela? qual a contradição? → 'People who talk a lot are often considered smart.'",
+          bank: ["regardless of", "are perceived as", "what this reveals", "the problem is", "in many cases"]
+        },
+        {
+          type: "Two Perspectives",
+          prompt: "Escreva sobre redes sociais do ponto de vista de um jornalista e depois de um adolescente cansado. Compare os tons.",
+          bank: ["According to", "From this perspective", "Honestly", "It seems like", "What worries me"]
+        },
+        {
+          type: "Subtext",
+          prompt: "Escreva um diálogo curto onde uma pessoa está magoada mas nunca diz 'I'm upset', 'I'm hurt' ou 'I'm angry'.",
+          bank: ["It's fine", "I just thought", "Never mind", "Whatever", "It doesn't matter"]
+        }
+      ]
+    },
+    {
+      num: "05",
+      tag: "Desbloqueio 5",
+      title: "Voz & Estilo",
+      subtitle: "Adaptar tom, ritmo e registro ao contexto",
+      unlock: {
+        icon: "🔓",
+        what: "Por que trava?",
+        why: "Você soa sempre igual — seja num e-mail profissional, numa reflexão pessoal ou numa análise. Ter voz não é ter sotaque. É saber calibrar o tom para o momento."
+      },
+      lesson: `
+        <h4>A mesma ideia em 4 registros</h4>
+        <p>Ideia: "I disagree with this decision."</p>
+        <ul>
+          <li><strong>Casual:</strong> "Honestly? I don't think that's the right call."</li>
+          <li><strong>Professional:</strong> "I'd like to raise some concerns about this approach."</li>
+          <li><strong>Reflective:</strong> "I keep coming back to this decision — something about it doesn't sit right with me."</li>
+          <li><strong>Direct:</strong> "This won't work. Here's why."</li>
+        </ul>
+        <div class="compare-block">
+          <div class="col"><div class="col-label">❌ Tom errado</div><p>"Dear John, I am not agree with what you did. It was bad. Regards."</p></div>
+          <div class="col"><div class="col-label">✓ Calibrado</div><p>"Hi John, I wanted to flag a concern about yesterday's decision — I think there are a few things worth reconsidering before we move forward."</p></div>
+        </div>
+        <h4>Ritmo também é estilo</h4>
+        <p>Frases curtas criam impacto. Frases mais longas e fluidas criam reflexão. Alternar os dois cria ritmo. Leia seu texto em voz alta — se travar, o ritmo está errado.</p>
+      `,
+      activities: [
+        {
+          type: "4 Registers",
+          prompt: "Reescreva a mesma ideia em 4 tons diferentes: 'I don't want to do this anymore.' — casual, professional, reflective, direct.",
+          bank: ["politely", "I'd like to", "I've been thinking", "To be clear"]
+        },
+        {
+          type: "Tone Repair",
+          prompt: "Transforme esta mensagem agressiva numa resposta firme mas profissional: 'You never listen to me. I told you this would happen. Fix it.'",
+          bank: ["I understand", "However", "I would appreciate", "Going forward"]
+        },
+        {
+          type: "Voice Writing",
+          prompt: "Escreva 100 palavras sobre ambição com tom reflexivo. Varie o ritmo: misture frases curtas e longas.",
+          bank: ["For a long time", "What changed was", "I used to think", "Now I see it differently"]
+        }
+      ]
     }
+  ];
 
-    function setAuthMode(mode) {
-      authMode = mode;
-      $("authTitle").textContent = mode === "login" ? "Entrar no curso" : "Criar conta";
-      $("authButton").textContent = mode === "login" ? "Entrar" : "Criar conta";
-      $("authName").style.display = mode === "login" ? "none" : "block";
-      $("nameLabel").style.display = mode === "login" ? "none" : "block";
-      $("loginTab").className = mode === "login" ? "btn" : "btn secondary";
-      $("signupTab").className = mode === "signup" ? "btn" : "btn secondary";
-      $("authMessage").className = "status-message";
-      $("authMessage").textContent = "";
+  const DAILY_PROMPTS = [
+    "Describe a place that makes you feel calm — focus on details, not feelings.",
+    "Write about a small decision that changed the direction of your day.",
+    "Describe a conversation where the real message was hidden between the lines.",
+    "Write about the difference between being productive and feeling useful.",
+    "Describe something people often misunderstand about you.",
+    "Write a paragraph starting with: 'For a long time, I thought…'",
+    "Write about why confidence can sometimes be misleading.",
+    "Describe a moment when you changed your mind about something important."
+  ];
+
+  // ─── STATE ─────────────────────────────────────────────────────────────────
+  let authMode = "login";
+  let currentUser = null;
+  let currentResult = null;
+  let completed = [];
+  let portfolio = [];
+  let currentMod = 0;
+  let currentAct = 0;
+  let timer = null;
+  let timerLeft = 300;
+
+  const $ = id => document.getElementById(id);
+
+  // ─── AUTH ──────────────────────────────────────────────────────────────────
+  function setAuthMode(mode) {
+    authMode = mode;
+    $("loginTab").className = mode === "login" ? "auth-tab active" : "auth-tab";
+    $("signupTab").className = mode === "signup" ? "auth-tab active" : "auth-tab";
+    $("nameField").style.display = mode === "signup" ? "block" : "none";
+    $("authButton").textContent = mode === "login" ? "Entrar" : "Criar conta";
+    $("authMessage").className = "status-msg";
+    $("authMessage").textContent = "";
+  }
+
+  function setStatus(id, msg, type) {
+    const el = $(id);
+    el.textContent = msg;
+    el.className = `status-msg ${type}`;
+  }
+
+  async function handleAuth() {
+    const email = $("authEmail").value.trim();
+    const password = $("authPassword").value.trim();
+    const name = $("authName") ? $("authName").value.trim() : "";
+
+    if (SUPABASE_URL.includes("COLE_AQUI")) {
+      setStatus("authMessage", "Configure a URL e a chave do Supabase no código antes de usar.", "err"); return;
     }
+    if (!email || !password) { setStatus("authMessage", "Preencha e-mail e senha.", "err"); return; }
+    if (password.length < 6) { setStatus("authMessage", "Senha precisa ter pelo menos 6 caracteres.", "err"); return; }
+    if (authMode === "signup" && !name) { setStatus("authMessage", "Preencha o nome.", "err"); return; }
 
-    async function handleAuth() {
-      try {
-        const email = $("authEmail").value.trim();
-        const password = $("authPassword").value.trim();
-        const fullName = $("authName").value.trim();
+    $("authButton").disabled = true;
+    $("authButton").textContent = "Aguarde...";
 
-        if (!SUPABASE_URL || SUPABASE_URL.includes("COLE_AQUI") || SUPABASE_URL.includes("/rest/v1")) {
-          setStatus("authMessage", "A URL do Supabase está errada. Use só a URL base do projeto, sem /rest/v1.", "err");
-          return;
-        }
-
-        if (!SUPABASE_ANON_KEY || SUPABASE_ANON_KEY.includes("COLE_AQUI")) {
-          setStatus("authMessage", "A anon/public key do Supabase ainda não foi configurada no código.", "err");
-          return;
-        }
-
-        if (!email || !password) {
-          setStatus("authMessage", "Preencha e-mail e senha.", "err");
-          return;
-        }
-
-        if (password.length < 6) {
-          setStatus("authMessage", "A senha precisa ter pelo menos 6 caracteres.", "err");
-          return;
-        }
-
-        if (authMode === "signup" && !fullName) {
-          setStatus("authMessage", "Preencha o nome completo para criar a conta.", "err");
-          return;
-        }
-
-        $("authButton").disabled = true;
-        $("authButton").textContent = authMode === "login" ? "Entrando..." : "Criando...";
-        setStatus("authMessage", "Conectando ao Supabase...", "ok");
-
-        if (authMode === "login") {
-          const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-
-          if (error) {
-            let msg = error.message || "Erro ao entrar.";
-            if (msg.toLowerCase().includes("invalid login credentials")) {
-              msg = "Conta não encontrada ou senha incorreta. Se você ainda não criou conta neste curso, clique em Criar conta.";
-            }
-            if (msg.toLowerCase().includes("email not confirmed")) {
-              msg = "Seu e-mail ainda precisa ser confirmado antes de entrar.";
-            }
-            setStatus("authMessage", msg, "err");
-            return;
-          }
-
-          if (!data?.user) {
-            setStatus("authMessage", "Não consegui encontrar esse usuário. Crie uma conta primeiro.", "err");
-            return;
-          }
-
-          currentUser = data.user;
-          await afterLogin();
-        } else {
-          const { data, error } = await supabaseClient.auth.signUp({
-            email,
-            password,
-            options: { data: { full_name: fullName } }
-          });
-
-          if (error) {
-            let msg = error.message || "Erro ao criar conta.";
-            if (msg.toLowerCase().includes("already registered") || msg.toLowerCase().includes("already been registered")) {
-              msg = "Esse e-mail já tem conta. Volte para Entrar e use a senha cadastrada.";
-            }
-            setStatus("authMessage", msg, "err");
-            return;
-          }
-
-          if (!data?.user) {
-            setStatus("authMessage", "Conta criada. Confirme o e-mail, se o Supabase pedir, e depois entre.", "ok");
-            return;
-          }
-
-          currentUser = data.user;
-          await upsertProfile(fullName, email);
-          await afterLogin();
-        }
-      } catch (err) {
-        console.error(err);
-        setStatus("authMessage", "Erro inesperado no login. Confira a URL/key do Supabase e as tabelas criadas.", "err");
-      } finally {
-        if ($("authButton")) {
-          $("authButton").disabled = false;
-          $("authButton").textContent = authMode === "login" ? "Entrar" : "Criar conta";
-        }
-      }
-    }
-
-    async function checkSession() {
-      const { data } = await supabaseClient.auth.getSession();
-      if (data.session?.user) {
-        currentUser = data.session.user;
+    try {
+      if (authMode === "login") {
+        const { data, error } = await sb.auth.signInWithPassword({ email, password });
+        if (error) { setStatus("authMessage", translateAuthError(error.message), "err"); return; }
+        currentUser = data.user;
+        await afterLogin();
+      } else {
+        const { data, error } = await sb.auth.signUp({ email, password, options: { data: { full_name: name } } });
+        if (error) { setStatus("authMessage", translateAuthError(error.message), "err"); return; }
+        if (!data?.user) { setStatus("authMessage", "Conta criada! Confirme o e-mail se necessário e entre.", "ok"); return; }
+        currentUser = data.user;
+        await sb.from("writing_profiles").upsert({ id: currentUser.id, full_name: name, email, updated_at: new Date().toISOString() });
         await afterLogin();
       }
+    } catch (e) {
+      console.error(e);
+      setStatus("authMessage", "Erro inesperado. Confira a URL/chave do Supabase.", "err");
+    } finally {
+      $("authButton").disabled = false;
+      $("authButton").textContent = authMode === "login" ? "Entrar" : "Criar conta";
     }
+  }
 
-    async function afterLogin() {
-      await ensureProfile();
-      await loadUserData();
-      $("authScreen").style.display = "none";
-      $("app").style.display = "block";
-      initCourse();
-    }
+  function translateAuthError(msg) {
+    if (!msg) return "Erro desconhecido.";
+    if (msg.includes("Invalid login credentials")) return "Conta não encontrada ou senha incorreta.";
+    if (msg.includes("Email not confirmed")) return "Confirme o e-mail antes de entrar.";
+    if (msg.includes("already registered")) return "E-mail já cadastrado. Tente entrar.";
+    return msg;
+  }
 
-    async function upsertProfile(fullName, email) {
-      const { error } = await supabaseClient.from("writing_profiles").upsert({
-        id: currentUser.id,
-        full_name: fullName || currentUser.user_metadata?.full_name || email,
-        email,
-        updated_at: new Date().toISOString()
-      });
-      if (error) console.error(error);
-    }
+  async function checkSession() {
+    const { data } = await sb.auth.getSession();
+    if (data.session?.user) { currentUser = data.session.user; await afterLogin(); }
+  }
 
-    async function ensureProfile() {
-      const { data, error } = await supabaseClient
-        .from("writing_profiles")
-        .select("*")
-        .eq("id", currentUser.id)
-        .maybeSingle();
+  async function afterLogin() {
+    await loadUserData();
+    $("authScreen").style.display = "none";
+    $("app").style.display = "block";
+    $("userChip").textContent = currentUser.email;
+    initApp();
+  }
 
-      if (error) console.error(error);
+  async function loadUserData() {
+    const [{ data: prog }, { data: subs }, { data: res }] = await Promise.all([
+      sb.from("writing_progress").select("module_index").eq("user_id", currentUser.id),
+      sb.from("writing_submissions").select("*").eq("user_id", currentUser.id).order("created_at", { ascending: false }),
+      sb.from("writing_results").select("*").eq("user_id", currentUser.id).maybeSingle()
+    ]);
+    completed = (prog || []).map(r => r.module_index);
+    portfolio = subs || [];
+    currentResult = res || null;
+    updateResultChip();
+  }
 
-      if (!data) {
-        await upsertProfile(currentUser.user_metadata?.full_name || currentUser.email, currentUser.email);
-      }
+  function updateResultChip() {
+    $("resultChip").textContent = currentResult
+      ? `${currentResult.best_score}% · ${currentResult.level_label}`
+      : "Sem avaliação ainda";
+  }
 
-      const { data: profile } = await supabaseClient
-        .from("writing_profiles")
-        .select("*")
-        .eq("id", currentUser.id)
-        .single();
+  async function logout() { await sb.auth.signOut(); location.reload(); }
 
-      currentProfile = profile;
-      $("studentName").textContent = currentProfile?.full_name || "Aluna";
-      $("studentEmail").textContent = currentProfile?.email || currentUser.email;
-    }
+  // ─── APP ───────────────────────────────────────────────────────────────────
+  function initApp() {
+    renderNav();
+    renderModule(0);
+    updateProgress();
+  }
 
-    async function loadUserData() {
-      const [{ data: progressData }, { data: writingData }, { data: resultData }] = await Promise.all([
-        supabaseClient.from("writing_progress").select("module_index, completed_at").eq("user_id", currentUser.id),
-        supabaseClient.from("writing_submissions").select("*").eq("user_id", currentUser.id).order("created_at", { ascending: false }),
-        supabaseClient.from("writing_results").select("*").eq("user_id", currentUser.id).maybeSingle()
-      ]);
+  function renderNav() {
+    const nav = $("moduleNav");
+    nav.innerHTML = MODULES.map((m, i) => `
+      <button class="mod-btn ${i === currentMod ? "active" : ""} ${completed.includes(i) ? "done" : ""}" onclick="selectModule(${i})">
+        <span class="mod-num">${m.tag}</span>
+        <span class="mod-name">${m.title}</span>
+        <span class="mod-sub">${m.subtitle}</span>
+      </button>
+    `).join("");
+  }
 
-      completed = (progressData || []).map(item => item.module_index);
-      portfolio = writingData || [];
-      currentResult = resultData || null;
-      updateFixedResultUI();
-    }
+  function selectModule(i) {
+    currentMod = i;
+    currentAct = 0;
+    renderNav();
+    renderModule(i);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
 
-    function updateFixedResultUI() {
-      if (!currentResult) {
-        $("fixedResult").textContent = "Ainda sem resultado";
-        return;
-      }
-      $("fixedResult").textContent = `${currentResult.best_score}% · ${currentResult.level_label}`;
-    }
+  function renderModule(i) {
+    const m = MODULES[i];
+    const content = $("mainContent");
+    content.innerHTML = `
+      <div class="lesson-header">
+        <div class="lesson-tag">${m.tag} · ${m.num}</div>
+        <h1 class="lesson-title">${m.title}</h1>
+        <p class="lesson-subtitle">${m.subtitle}</p>
+      </div>
 
-    async function logout() {
-      await supabaseClient.auth.signOut();
-      location.reload();
-    }
-
-    function initCourse() {
-      renderModules();
-      selectModule(0, false);
-      newPrompt();
-      updateProgress();
-      renderPortfolio();
-      resetTimer();
-    }
-
-    function renderModules() {
-      const list = $("moduleList");
-      list.innerHTML = "";
-      course.forEach((mod, index) => {
-        const btn = document.createElement("button");
-        btn.className = "module-btn" + (index === currentModule ? " active" : "");
-        btn.onclick = () => selectModule(index);
-        btn.innerHTML = `<small>${mod.phase} · Module ${index + 1}</small><strong>${completed.includes(index) ? "✓ " : ""}${mod.title}</strong><span>${mod.subtitle}</span>`;
-        list.appendChild(btn);
-      });
-    }
-
-    function selectModule(index, scroll = true) {
-      currentModule = index;
-      currentActivity = 0;
-      const mod = course[index];
-      $("phaseTag").textContent = `${mod.phase} · Module ${index + 1}`;
-      $("lessonTitle").textContent = mod.title;
-      $("lessonWindowTitle").textContent = `module_${index + 1}.html`;
-      $("lessonBody").innerHTML = `<p><strong>Objetivo:</strong> ${mod.objective}</p>${mod.lesson}`;
-      renderModules();
-      renderActivityTabs();
-      renderActivity();
-      if (scroll) scrollToLesson();
-    }
-
-    function startCourse() {
-      selectModule(0, false);
-      setTimeout(() => {
-        scrollToLesson();
-        pulsePracticeLab();
-      }, 80);
-    }
-
-    function scrollToLesson() {
-      const lessonTitle = document.getElementById("lessonTitle");
-      if (lessonTitle) {
-        lessonTitle.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
-    }
-
-    function pulsePracticeLab() {
-      const practice = document.getElementById("activityArea");
-      if (!practice) return;
-      practice.style.transition = "box-shadow .25s ease, transform .25s ease";
-      practice.style.boxShadow = "0 0 0 5px rgba(122, 92, 255, .18)";
-      practice.style.transform = "scale(1.01)";
-      setTimeout(() => {
-        practice.style.boxShadow = "none";
-        practice.style.transform = "scale(1)";
-      }, 900);
-    }
-
-    function renderActivityTabs() {
-      const tabs = $("activityTabs");
-      tabs.innerHTML = "";
-      course[currentModule].activities.forEach((act, index) => {
-        const btn = document.createElement("button");
-        btn.className = "tab" + (index === currentActivity ? " active" : "");
-        btn.textContent = act.type;
-        btn.onclick = () => { currentActivity = index; renderActivityTabs(); renderActivity(); };
-        tabs.appendChild(btn);
-      });
-    }
-
-    function renderActivity() {
-      const act = course[currentModule].activities[currentActivity];
-      $("activityArea").innerHTML = `
-        <div class="exercise">
-          <h4>${act.type}</h4>
-          <p>${act.prompt}</p>
-          <div class="word-bank">${act.bank.map(w => `<span class="chip">${w}</span>`).join("")}</div>
-          <textarea id="studentWriting" placeholder="Write your answer here..."></textarea>
-          <div id="savedDraftNotice" class="box" style="display:none;background:#fff;">Resposta anterior carregada.</div>
-          <div class="btn-row">
-            <button class="btn" onclick="evaluateCurrentWriting()">Avaliar e salvar</button>
-            <button class="btn secondary" onclick="saveCurrentWriting()">Salvar sem avaliar</button>
-            <button class="btn secondary" onclick="clearWriting()">Limpar</button>
-          </div>
-          <div class="result-panel" id="evaluationResult"></div>
+      <div class="unlock-banner">
+        <div class="unlock-icon">${m.unlock.icon}</div>
+        <div class="unlock-text">
+          <strong>${m.unlock.what}</strong>
+          <p>${m.unlock.why}</p>
         </div>
-      `;
-      loadLatestActivityAnswer();
-    }
+      </div>
 
-    async function loadLatestActivityAnswer() {
-      if (!currentUser) return;
-      const textarea = $("studentWriting");
-      if (!textarea) return;
+      <div class="lesson-body">${m.lesson}</div>
 
-      const { data, error } = await supabaseClient
-        .from("writing_submissions")
-        .select("content, score, level_label, metrics, created_at")
-        .eq("user_id", currentUser.id)
-        .eq("module_index", currentModule)
-        .eq("activity_index", currentActivity)
-        .eq("is_diagnostic", false)
-        .order("created_at", { ascending: false })
-        .limit(1)
-        .maybeSingle();
+      <div class="practice-section">
+        <div class="practice-header">
+          <div class="practice-title">Practice</div>
+        </div>
+        <div class="act-tabs" id="actTabs"></div>
+        <div id="actContent"></div>
+      </div>
 
-      if (error) {
-        console.error(error);
-        return;
+      <div class="tools-row">
+        <div class="tool-card">
+          <div class="tool-head">⏱ Timer</div>
+          <div class="tool-body">
+            <div class="timer-display" id="timerDisplay">05:00</div>
+            <select id="timerSelect">
+              <option value="300">5 min</option>
+              <option value="600">10 min</option>
+              <option value="1200">20 min</option>
+              <option value="1800">30 min</option>
+            </select>
+            <div style="display:flex;gap:8px;">
+              <button class="btn-timer" onclick="startTimer()">Start</button>
+              <button class="btn-timer" style="background:transparent;color:var(--ink);" onclick="resetTimerBtn()">Reset</button>
+            </div>
+          </div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-head">✦ Prompt do dia</div>
+          <div class="tool-body">
+            <p class="prompt-text" id="dailyPrompt"></p>
+            <button class="btn-sec" onclick="newPrompt()">Novo prompt</button>
+          </div>
+        </div>
+      </div>
+
+      ${portfolio.length ? `
+      <div class="portfolio-wrap">
+        <div class="port-title">Seus textos salvos</div>
+        <div id="portList"></div>
+      </div>` : ""}
+
+      <button class="btn-complete" onclick="markComplete()">
+        ${completed.includes(i) ? "✓ Módulo concluído" : "Marcar módulo como concluído →"}
+      </button>
+    `;
+
+    document.getElementById("timerSelect").addEventListener("change", resetTimerBtn);
+    resetTimerBtn();
+    newPrompt();
+    renderActTabs();
+    renderAct();
+    if (portfolio.length) renderPortList();
+  }
+
+  function renderActTabs() {
+    const tabs = $("actTabs");
+    tabs.innerHTML = MODULES[currentMod].activities.map((a, i) => `
+      <button class="act-tab ${i === currentAct ? "active" : ""}" onclick="selectAct(${i})">${a.type}</button>
+    `).join("");
+  }
+
+  function selectAct(i) {
+    currentAct = i;
+    renderActTabs();
+    renderAct();
+  }
+
+  function renderAct() {
+    const act = MODULES[currentMod].activities[currentAct];
+    const content = $("actContent");
+    content.innerHTML = `
+      <div class="exercise-card">
+        <div class="exercise-top">
+          <div class="ex-type">${act.type}</div>
+          <div class="ex-prompt">${act.prompt}</div>
+        </div>
+        <div class="exercise-bank">
+          <div class="bank-label">Word bank</div>
+          <div class="chunk-list">${act.bank.map(w => `<span class="chunk">${w}</span>`).join("")}</div>
+        </div>
+        <div class="exercise-write">
+          <textarea id="writingArea" placeholder="Write here…"></textarea>
+          <div class="draft-notice" id="draftNotice"></div>
+          <div class="exercise-actions">
+            <button class="btn-eval" onclick="evaluate()">Avaliar & salvar</button>
+            <button class="btn-sec" onclick="saveOnly()">Salvar sem avaliar</button>
+            <button class="btn-sec" onclick="clearArea()">Limpar</button>
+          </div>
+          <div class="result-panel" id="resultPanel"></div>
+        </div>
+      </div>
+    `;
+    loadDraft();
+  }
+
+  async function loadDraft() {
+    if (!currentUser) return;
+    const { data } = await sb
+      .from("writing_submissions")
+      .select("content, score, level_label, metrics")
+      .eq("user_id", currentUser.id)
+      .eq("module_index", currentMod)
+      .eq("activity_index", currentAct)
+      .eq("is_diagnostic", false)
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (data?.content && $("writingArea")) {
+      $("writingArea").value = data.content;
+      const notice = $("draftNotice");
+      notice.style.display = "block";
+      notice.textContent = `Rascunho anterior carregado.${data.score ? ` Última nota: ${data.score}% · ${data.level_label}` : ""}`;
+      if (data.score && data.metrics) {
+        showResult({ total: data.score, level: data.level_label, metrics: data.metrics,
+          words: data.content.split(/\s+/).filter(Boolean).length,
+          sentences: data.content.split(/[.!?]+/).filter(s => s.trim()).length,
+          connectors: 0, unnatural: 0 });
       }
+    }
+  }
 
-      if (data?.content && $("studentWriting")) {
-        $("studentWriting").value = data.content;
-        const notice = $("savedDraftNotice");
-        if (notice) {
-          notice.style.display = "block";
-          notice.innerHTML = `Resposta anterior carregada do banco. ${data.score ? `Última nota: <strong>${data.score}%</strong> · ${data.level_label}` : "Ainda sem avaliação."}`;
-        }
+  function clearArea() {
+    $("writingArea").value = "";
+    $("resultPanel").style.display = "none";
+  }
 
-        if (data.score && data.metrics) {
-          renderEvaluation({
-            total: data.score,
-            level: data.level_label,
-            metrics: data.metrics,
-            words: data.content.split(/\s+/).filter(Boolean).length,
-            sentences: data.content.split(/[.!?]+/).map(s => s.trim()).filter(Boolean).length,
-            connectorCount: 0,
-            unnaturalCount: 0
-          }, "evaluationResult");
-        }
+  // ─── EVALUATE ──────────────────────────────────────────────────────────────
+  function evalText(text, act) {
+    const words = text.trim().split(/\s+/).filter(Boolean);
+    const sentences = text.split(/[.!?]+/).map(s => s.trim()).filter(Boolean);
+    const lower = text.toLowerCase();
+    const unique = new Set(words.map(w => w.toLowerCase().replace(/[^a-z']/g, ""))).size;
+
+    const CONNECTORS = ["although", "however", "because", "therefore", "while", "even though", "despite",
+      "as a result", "on the other hand", "in the end", "meanwhile", "instead", "which means", "despite"];
+    const DEPTH_MARKERS = ["suggests", "reveals", "implies", "in many cases", "this means", "what makes",
+      "the reason", "the problem", "regardless of", "what this", "for example", "for instance"];
+    const ADVANCED = ["perceived", "regardless", "tendency", "increasingly", "constant", "pressure",
+      "identity", "visibility", "emotional", "productivity", "appearance", "substance"];
+    const UNNATURAL = [/i have \d+ years/i, /people is/i, /she don't/i, /he don't/i,
+      /i have difficult/i, /depends of/i, /more better/i, /very much/i];
+
+    const connectorCount = CONNECTORS.filter(c => lower.includes(c)).length;
+    const depthCount = DEPTH_MARKERS.filter(c => lower.includes(c)).length;
+    const advancedCount = ADVANCED.filter(c => lower.includes(c)).length;
+    const unnaturalCount = UNNATURAL.filter(rx => rx.test(text)).length;
+    const avg = sentences.length ? words.length / sentences.length : 0;
+    const bankUsed = act.bank.filter(w => lower.includes(w.toLowerCase().split(" ")[0])).length;
+    const clamp = n => Math.max(0, Math.min(10, n));
+
+    const clarity = clamp(Math.round(
+      (words.length >= 25 ? 4 : words.length / 6) +
+      (sentences.length >= 2 ? 3 : 1) +
+      (avg > 5 && avg < 28 ? 3 : 1) - unnaturalCount * 1.5
+    ));
+    const cohesion = clamp(Math.round(
+      connectorCount * 2.2 + (sentences.length >= 3 ? 2 : 1) + (lower.includes("because") ? 1 : 0)
+    ));
+    const depth = clamp(Math.round(
+      depthCount * 2 + (words.length >= 80 ? 3 : words.length >= 45 ? 2 : 1) + advancedCount * 0.8 + bankUsed * 0.5
+    ));
+
+    const metrics = { clarity, cohesion, depth };
+    const total = Math.round((clarity + cohesion + depth) / 3 * 10);
+    const level = total >= 85 ? "Advanced" : total >= 70 ? "Strong Intermediate" : total >= 50 ? "Developing" : "Foundations";
+    return { words: words.length, sentences: sentences.length, connectors: connectorCount,
+      unnatural: unnaturalCount, unique, metrics, total, level };
+  }
+
+  function showResult(data) {
+    const panel = $("resultPanel");
+    const LABELS = { clarity: "Clareza & Naturalidade", cohesion: "Coesão & Estrutura", depth: "Profundidade" };
+    const TIPS_IF_LOW = {
+      clarity: "Use chunks naturais, evite tradução literal e prefira frases diretas.",
+      cohesion: "Adicione conectores (although, however, because, as a result) e organize: ideia → explicação → exemplo.",
+      depth: "Após uma opinião, pergunte: por quê? o que revela? qual é a contradição? Expanda com exemplo ou consequência."
+    };
+    const steps = [];
+    if (data.words < 45) steps.push("Expanda o texto — adicione exemplo, contexto ou consequência.");
+    if (data.connectors < 1) steps.push("Conecte as frases: although, however, which means, as a result.");
+    if (data.unnatural > 0) steps.push("Verifique possíveis traduções literais.");
+    Object.entries(data.metrics).forEach(([k, v]) => { if (v < 6) steps.push(TIPS_IF_LOW[k]); });
+    if (!steps.length) steps.push("Sólido. Agora releia e refine ritmo, precisão e impacto de cada frase.");
+
+    const metricsHTML = Object.entries(data.metrics).map(([k, v]) => `
+      <div class="metric-row">
+        <span>${LABELS[k]}</span>
+        <div class="metric-track"><div class="metric-fill" style="width:${v * 10}%"></div></div>
+        <span class="metric-val">${v}/10</span>
+      </div>
+    `).join("");
+
+    panel.innerHTML = `
+      <div class="result-top">
+        <div>
+          <div class="score-big">${data.total}%</div>
+          <div class="score-label">${data.level}</div>
+        </div>
+        <div style="font-family:var(--mono);font-size:.72rem;color:rgba(250,248,244,.5);text-align:right;">
+          ${data.words} words<br>${data.sentences} sentences<br>${data.connectors} connector(s)
+        </div>
+      </div>
+      <div class="result-body">
+        ${metricsHTML}
+        <div class="next-steps">
+          <div class="ns-title">Próximos passos</div>
+          <ul>${steps.map(s => `<li>${s}</li>`).join("")}</ul>
+        </div>
+      </div>
+    `;
+    panel.style.display = "block";
+  }
+
+  async function evaluate() {
+    const text = $("writingArea").value;
+    if (!text.trim()) { alert("Escreva algo antes de avaliar."); return; }
+    const act = MODULES[currentMod].activities[currentAct];
+    const data = evalText(text, act);
+    showResult(data);
+    await saveText(`${MODULES[currentMod].title} — ${act.type}`, text, data, false);
+    await updateBestResult(data);
+  }
+
+  async function saveOnly() {
+    const text = $("writingArea").value.trim();
+    if (!text) { alert("Escreva algo antes de salvar."); return; }
+    await saveText(`${MODULES[currentMod].title} — ${MODULES[currentMod].activities[currentAct].type}`, text, null, false);
+  }
+
+  async function saveText(title, text, evaluation, isDiag) {
+    const payload = {
+      user_id: currentUser.id,
+      title,
+      module_index: isDiag ? null : currentMod,
+      activity_index: isDiag ? null : currentAct,
+      prompt: isDiag ? "Diagnostic" : MODULES[currentMod].activities[currentAct].prompt,
+      content: text,
+      score: evaluation?.total || null,
+      level_label: evaluation?.level || null,
+      metrics: evaluation?.metrics || null,
+      is_diagnostic: !!isDiag
+    };
+    const { data, error } = await sb.from("writing_submissions").insert(payload).select().single();
+    if (error) { console.error(error); alert("Erro ao salvar. Confira as tabelas do Supabase."); return; }
+    portfolio.unshift(data);
+    if ($("portList")) renderPortList();
+    else if (portfolio.length === 1) {
+      const pw = document.createElement("div");
+      pw.className = "portfolio-wrap";
+      pw.innerHTML = `<div class="port-title">Seus textos salvos</div><div id="portList"></div>`;
+      $("mainContent").querySelector(".btn-complete").before(pw);
+      renderPortList();
+    }
+    alert("Salvo.");
+  }
+
+  async function updateBestResult(data) {
+    if (currentResult && data.total <= currentResult.best_score) return;
+    const payload = { user_id: currentUser.id, best_score: data.total, level_label: data.level, metrics: data.metrics, updated_at: new Date().toISOString() };
+    const { data: saved, error } = await sb.from("writing_results").upsert(payload, { onConflict: "user_id" }).select().single();
+    if (error) { console.error(error); return; }
+    currentResult = saved;
+    updateResultChip();
+  }
+
+  async function markComplete() {
+    const { error } = await sb.from("writing_progress").upsert(
+      { user_id: currentUser.id, module_index: currentMod, completed_at: new Date().toISOString() },
+      { onConflict: "user_id,module_index" }
+    );
+    if (error) { console.error(error); alert("Erro ao salvar progresso."); return; }
+    if (!completed.includes(currentMod)) completed.push(currentMod);
+    renderNav();
+    updateProgress();
+    const btn = $("mainContent").querySelector(".btn-complete");
+    if (btn) btn.textContent = "✓ Módulo concluído";
+  }
+
+  function updateProgress() {
+    const pct = Math.round((completed.length / MODULES.length) * 100);
+    $("progressPct").textContent = `${pct}%`;
+    $("progressFill").style.width = `${pct}%`;
+  }
+
+  function renderPortList() {
+    const list = $("portList");
+    if (!list) return;
+    const items = portfolio.filter(p => !p.is_diagnostic);
+    list.innerHTML = items.slice(0, 8).map(p => `
+      <div class="port-item">
+        <strong>${p.title}</strong>
+        <span class="port-meta">${new Date(p.created_at).toLocaleString("pt-BR")} ${p.score ? `· ${p.score}% · ${p.level_label}` : ""}</span>
+        <p>${p.content.slice(0, 300)}${p.content.length > 300 ? "…" : ""}</p>
+        <button class="btn-del" onclick="deleteItem('${p.id}')">Excluir</button>
+      </div>
+    `).join("");
+  }
+
+  async function deleteItem(id) {
+    const { error } = await sb.from("writing_submissions").delete().eq("id", id).eq("user_id", currentUser.id);
+    if (error) { alert("Erro ao excluir."); return; }
+    portfolio = portfolio.filter(p => p.id !== id);
+    renderPortList();
+  }
+
+  // ─── TIMER ─────────────────────────────────────────────────────────────────
+  function startTimer() {
+    clearInterval(timer);
+    timer = setInterval(() => {
+      timerLeft--;
+      if (timerLeft <= 0) {
+        timerLeft = 0;
+        clearInterval(timer);
+        alert("Tempo! Revise e avalie o texto.");
       }
-    }
-
-    function evaluateText(text, activity) {
-      const clean = text.trim();
-      const words = clean ? clean.split(/\s+/).filter(Boolean) : [];
-      const sentences = clean ? clean.split(/[.!?]+/).map(s => s.trim()).filter(Boolean) : [];
-      const lower = clean.toLowerCase();
-      const unique = new Set(words.map(w => w.toLowerCase().replace(/[^a-z']/g, ""))).size;
-      const connectors = ["although", "however", "because", "therefore", "while", "even though", "despite", "as a result", "on the other hand", "in the end", "meanwhile", "instead", "otherwise", "still", "for example", "for instance", "ultimately"];
-      const depthMarkers = ["suggests", "reveals", "implies", "in many cases", "this means", "what makes", "the reason", "the problem", "the idea", "in my experience", "for example", "for instance"];
-      const advancedWords = ["perceived", "regardless", "substance", "tendency", "increasingly", "constant", "pressure", "identity", "visibility", "importance", "emotional", "distance", "modern", "attention", "productivity"];
-      const unnaturalPatterns = [/i have \d+ years/i, /people is/i, /she don't/i, /he don't/i, /i have difficult/i, /depends of/i, /make sense for me/i, /more better/i, /very much/i];
-      const connectorCount = connectors.filter(c => lower.includes(c)).length;
-      const depthCount = depthMarkers.filter(c => lower.includes(c)).length;
-      const advancedCount = advancedWords.filter(c => lower.includes(c)).length;
-      const unnaturalCount = unnaturalPatterns.filter(rx => rx.test(clean)).length;
-      const avgSentence = sentences.length ? words.length / sentences.length : 0;
-      const requiredBankUsed = activity.bank.filter(w => lower.includes(w.toLowerCase().split(" ")[0])).length;
-      const clarity = clamp(Math.round((words.length >= 25 ? 4 : words.length / 6) + (sentences.length >= 2 ? 3 : 1) + (avgSentence > 5 && avgSentence < 28 ? 3 : 1) - unnaturalCount * 1.5));
-      const cohesion = clamp(Math.round(connectorCount * 2.2 + (sentences.length >= 3 ? 2 : 1) + (lower.includes("because") ? 1 : 0) + (lower.includes("but") ? 1 : 0)));
-      const naturalness = clamp(Math.round(7 - unnaturalCount * 2 + (lower.includes("i tend to") || lower.includes("ended up") || lower.includes("it made me") ? 2 : 0) + (avgSentence > 22 ? -1 : 1)));
-      const vocabulary = clamp(Math.round((unique / Math.max(words.length, 1)) * 8 + advancedCount * 1.2 + requiredBankUsed));
-      const depth = clamp(Math.round(depthCount * 2 + (words.length >= 80 ? 3 : words.length >= 45 ? 2 : 1) + (lower.includes("example") || lower.includes("for instance") ? 1 : 0)));
-      const structure = clamp(Math.round(
-        (sentences.length >= 3 ? 3 : sentences.length) +
-        (words.length >= 80 ? 3 : words.length >= 45 ? 2 : 1) +
-        (/(for example|for instance|such as)/i.test(clean) ? 1 : 0) +
-        (/(because|therefore|as a result|this means|this suggests)/i.test(clean) ? 1 : 0) +
-        (/(however|although|even though|on the other hand|while)/i.test(clean) ? 1 : 0)
-      ));
-      const task = clamp(Math.round(requiredBankUsed * 2 + (words.length >= 40 ? 3 : 1) + (clean.includes("?") ? 0 : 1) + (activity.prompt.toLowerCase().includes("paragraph") && sentences.length >= 3 ? 2 : 0)));
-      const metrics = { clarity, cohesion, naturalness, vocabulary, depth, structure, task };
-      const total = Math.round(Object.values(metrics).reduce((a,b) => a + b, 0) / 7 * 10);
-      const level = total >= 85 ? "Advanced writing" : total >= 70 ? "Strong intermediate writing" : total >= 50 ? "Developing writing" : "Needs foundation work";
-      return { words: words.length, sentences: sentences.length, avgSentence, connectorCount, unnaturalCount, metrics, total, level };
-    }
-
-    function clamp(n) { return Math.max(0, Math.min(10, n)); }
-
-    function buildMetricTips(data) {
-      const tips = {};
-      tips.clarity = data.metrics.clarity >= 9
-        ? "Clareza alta: mantenha frases diretas e evite ideias demais na mesma frase."
-        : "Para aumentar clareza: divida frases longas, deixe o sujeito claro e explique exatamente quem fez o quê. Evite tradução literal.";
-      tips.cohesion = data.metrics.cohesion >= 9
-        ? "Coesão alta: suas ideias estão bem conectadas."
-        : "Para aumentar coesão: use conectores com função real. Ex.: because para causa, however para contraste, therefore/as a result para consequência, for example para exemplo.";
-      tips.naturalness = data.metrics.naturalness >= 9
-        ? "Naturalidade alta: a escrita parece pouco traduzida."
-        : "Para soar mais natural: prefira chunks como I tend to, I ended up, it made me feel, one thing I noticed is. Revise estruturas como people is, depends of, I have difficult.";
-      tips.vocabulary = data.metrics.vocabulary >= 9
-        ? "Vocabulário forte: boa variedade e escolhas mais específicas."
-        : "Para aumentar vocabulário: troque palavras genéricas por termos mais precisos. Ex.: good → meaningful/useful/effective; bad → harmful/limited/problematic.";
-      tips.depth = data.metrics.depth >= 9
-        ? "Profundidade alta: você desenvolveu interpretação, causa e consequência."
-        : "Para aumentar profundidade: depois da opinião, responda: por que isso acontece? o que isso revela? qual exemplo prova isso? qual consequência isso gera?";
-      tips.structure = data.metrics.structure >= 9
-        ? "Estrutura forte: o texto tem ideia, desenvolvimento e fechamento."
-        : "Para aumentar estrutura: organize em 3 partes: ideia principal + explicação + exemplo/consequência. Se for parágrafo, escreva pelo menos 3 frases conectadas.";
-      tips.task = data.metrics.task >= 9
-        ? "Tarefa bem cumprida: você respondeu ao prompt e usou bem os recursos pedidos."
-        : "Para cumprir melhor a tarefa: responda exatamente ao prompt, use algumas palavras do banco e confira se o texto faz o que a atividade pediu.";
-      return tips;
-    }
-
-    function renderEvaluation(data, targetId) {
-      const tips = [];
-      if (data.words < 45) tips.push("Expanda o texto com exemplo, contexto ou consequência.");
-      if (data.connectorCount < 1) tips.push("Adicione conectores como although, however, because, while ou therefore.");
-      if (data.unnaturalCount > 0) tips.push("Revise possíveis traduções literais ou estruturas pouco naturais.");
-      if (data.metrics.depth < 6) tips.push("Inclua interpretação: o que essa ideia revela, sugere ou causa?");
-      if (data.metrics.vocabulary < 6) tips.push("Troque palavras genéricas por termos mais precisos.");
-      if (data.metrics.structure < 6) tips.push("Organize melhor: ideia principal + explicação + exemplo ou consequência.");
-      if (!tips.length) tips.push("Boa base. Agora reescreva buscando mais ritmo, precisão e impacto.");
-      const metricLabels = { clarity: "Clareza", cohesion: "Coesão", naturalness: "Naturalidade", vocabulary: "Vocabulário", depth: "Profundidade", structure: "Estrutura", task: "Tarefa" };
-      const metricTips = buildMetricTips(data);
-      const metricsHTML = Object.entries(data.metrics).map(([key, value]) => `<div class="metric" data-tip="${metricTips[key]}"><strong>${metricLabels[key]}</strong><div class="mini-bar"><div class="mini-fill" style="width:${value * 10}%"></div></div><span>${value}/10</span></div>`).join("");
-      const panel = $(targetId);
-      panel.innerHTML = `<div class="score-head"><div><strong>Resultado do curso</strong><br><span>${data.level}</span></div><div class="score-number">${data.total}%</div></div>${metricsHTML}<div class="box" style="background:white;margin-top:12px;"><strong>Diagnóstico:</strong> ${data.words} palavras, ${data.sentences} frases, ${data.connectorCount} conector(es) detectado(s).</div><strong>Próximos passos:</strong><ul>${tips.map(t => `<li>${t}</li>`).join("")}</ul>`;
-      panel.style.display = "block";
-    }
-
-    async function evaluateCurrentWriting() {
-      const text = $("studentWriting").value;
-      if (!text.trim()) { alert("Escreva algo antes de avaliar."); return; }
-      const activity = course[currentModule].activities[currentActivity];
-      const data = evaluateText(text, activity);
-      renderEvaluation(data, "evaluationResult");
-      await saveSpecificText(`${course[currentModule].title} — ${activity.type}`, text, data, false);
-      await updateFixedResult(data);
-    }
-
-    async function evaluateDiagnostic() {
-      const text = $("diagnosticText").value;
-      if (!text.trim()) { alert("Escreva o diagnóstico antes de avaliar."); return; }
-      const data = evaluateText(text, { bank: ["because", "although", "what", "learned"], prompt: "diagnostic paragraph" });
-      renderEvaluation(data, "diagnosticResult");
-      await saveSpecificText("Texto diagnóstico", text, data, true);
-      await updateFixedResult(data);
-    }
-
-    async function updateFixedResult(data) {
-      const shouldUpdate = !currentResult || data.total > currentResult.best_score;
-      if (!shouldUpdate) return;
-      const payload = {
-        user_id: currentUser.id,
-        best_score: data.total,
-        level_label: data.level,
-        metrics: data.metrics,
-        updated_at: new Date().toISOString()
-      };
-      const { data: saved, error } = await supabaseClient.from("writing_results").upsert(payload, { onConflict: "user_id" }).select().single();
-      if (error) {
-        console.error(error);
-        alert("A avaliação foi feita, mas não consegui atualizar o resultado fixo. Confira as tabelas do Supabase.");
-        return;
-      }
-      currentResult = saved;
-      updateFixedResultUI();
-    }
-
-    function clearWriting() {
-      $("studentWriting").value = "";
-      $("evaluationResult").style.display = "none";
-    }
-
-    async function saveCurrentWriting() {
-      const text = $("studentWriting").value.trim();
-      const title = `${course[currentModule].title} — ${course[currentModule].activities[currentActivity].type}`;
-      await saveSpecificText(title, text, null, false);
-    }
-
-    async function saveSpecificText(title, text, evaluation, isDiagnostic) {
-      if (!text || !text.trim()) { alert("Escreva algo antes de salvar."); return; }
-      const payload = {
-        user_id: currentUser.id,
-        title,
-        module_index: isDiagnostic ? null : currentModule,
-        activity_index: isDiagnostic ? null : currentActivity,
-        prompt: isDiagnostic ? "Diagnostic writing" : course[currentModule].activities[currentActivity].prompt,
-        content: text.trim(),
-        score: evaluation?.total || null,
-        level_label: evaluation?.level || null,
-        metrics: evaluation?.metrics || null,
-        is_diagnostic: !!isDiagnostic
-      };
-      const { data, error } = await supabaseClient.from("writing_submissions").insert(payload).select().single();
-      if (error) {
-        console.error(error);
-        alert("Não consegui salvar no Supabase. Confira se as tabelas foram criadas e se a URL/anon key estão corretas.");
-        return;
-      }
-      portfolio.unshift(data);
-      renderPortfolio();
-      alert("Texto salvo no banco.");
-    }
-
-    function renderPortfolio() {
-      const list = $("portfolioList");
-      if (!list) return;
-      if (!portfolio.length) { list.innerHTML = `<div class="box">Nenhum texto salvo ainda.</div>`; return; }
-      list.innerHTML = portfolio.map((item) => `<div class="portfolio-item"><strong>${item.title}</strong><br><small>${new Date(item.created_at).toLocaleString("pt-BR")} ${item.score ? `· ${item.score}% · ${item.level_label}` : ""}</small><p>${item.content.slice(0, 420)}${item.content.length > 420 ? "..." : ""}</p><div class="btn-row"><button class="btn danger" onclick="deletePortfolioItem('${item.id}')">Excluir</button></div></div>`).join("");
-    }
-
-    async function deletePortfolioItem(id) {
-      const { error } = await supabaseClient.from("writing_submissions").delete().eq("id", id).eq("user_id", currentUser.id);
-      if (error) { alert("Não consegui excluir."); return; }
-      portfolio = portfolio.filter(item => item.id !== id);
-      renderPortfolio();
-    }
-
-    async function markCurrentComplete() {
-      const payload = { user_id: currentUser.id, module_index: currentModule, completed_at: new Date().toISOString() };
-      const { error } = await supabaseClient.from("writing_progress").upsert(payload, { onConflict: "user_id,module_index" });
-      if (error) {
-        console.error(error);
-        alert("Não consegui salvar o progresso. Confira a tabela writing_progress.");
-        return;
-      }
-      if (!completed.includes(currentModule)) completed.push(currentModule);
-      renderModules();
-      updateProgress();
-    }
-
-    function updateProgress() {
-      const percentage = Math.round((completed.length / course.length) * 100);
-      $("progressText").textContent = `${percentage}%`;
-      $("progressFill").style.width = `${percentage}%`;
-    }
-
-    function newPrompt() {
-      $("dailyPrompt").textContent = prompts[Math.floor(Math.random() * prompts.length)];
-    }
-
-    function openModal(id) {
-      $(id).style.display = "flex";
-      if (id === "portfolioModal") renderPortfolio();
-    }
-
-    function closeModal(id) { $(id).style.display = "none"; }
-
-    function startTimer() {
-      clearInterval(timer);
-      timer = setInterval(() => {
-        timerLeft -= 1;
-        if (timerLeft <= 0) {
-          timerLeft = 0;
-          clearInterval(timer);
-          alert("Tempo finalizado. Agora revise e avalie o texto.");
-        }
-        renderTimer();
-      }, 1000);
-    }
-
-    function resetTimer() {
-      clearInterval(timer);
-      timerLeft = Number($("timerSelect").value || 300);
       renderTimer();
-    }
+    }, 1000);
+  }
 
-    function renderTimer() {
-      const min = String(Math.floor(timerLeft / 60)).padStart(2, "0");
-      const sec = String(timerLeft % 60).padStart(2, "0");
-      $("timerDisplay").textContent = `${min}:${sec}`;
-    }
+  function resetTimerBtn() {
+    clearInterval(timer);
+    const sel = $("timerSelect");
+    timerLeft = sel ? Number(sel.value) : 300;
+    renderTimer();
+  }
 
-    document.addEventListener("change", (e) => {
-      if (e.target.id === "timerSelect") resetTimer();
-    });
+  function renderTimer() {
+    const d = $("timerDisplay");
+    if (!d) return;
+    d.textContent = `${String(Math.floor(timerLeft / 60)).padStart(2, "0")}:${String(timerLeft % 60).padStart(2, "0")}`;
+  }
 
-    document.addEventListener("click", (e) => {
-      if (e.target.classList.contains("modal-backdrop")) e.target.style.display = "none";
-    });
+  // ─── PROMPTS ───────────────────────────────────────────────────────────────
+  function newPrompt() {
+    const el = $("dailyPrompt");
+    if (el) el.textContent = DAILY_PROMPTS[Math.floor(Math.random() * DAILY_PROMPTS.length)];
+  }
 
-    checkSession();
-  </script>
+  // ─── INIT ──────────────────────────────────────────────────────────────────
+  checkSession();
+</script>
 </body>
 </html>
